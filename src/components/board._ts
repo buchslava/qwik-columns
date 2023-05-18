@@ -1,0 +1,202 @@
+import { Gameplay } from './gameplay';
+import { Global, Phase } from './global';
+
+
+export class BoardState {
+    autoMoveDownDuration = 800;
+    shapeTimer: any;
+    dropTimer: any;
+  
+    BoardState() {
+        if (Global.phase == Phase.inactive) {
+            Gameplay.init();
+          }
+          }
+
+    initState() {
+    Global.phase = Phase.inactive;
+    // widget.moveSubs = Global.eventBus.on<MoveEvent>().listen((event) {
+      if (Global.isPause || Global.phase == Phase.inactive) {
+        return;
+      }
+      switch (event.type) {
+        case MoveEventType.moveLeft:
+            Gameplay.moveLeft();
+          break;
+        case MoveEventType.moveRight:
+            Gameplay.moveRight();
+          break;
+        case MoveEventType.swapActorColors:
+            Gameplay.swapActorColors();
+          break;
+        case MoveEventType.moveHorTo:
+            Gameplay.moveHorTo(event.pos);
+          break;
+        case MoveEventType.drop:
+          if ((this.shapeTimer != null && this.shapeTimer.isActive) &&
+              (widget.dropTimer == null || !widget.dropTimer.isActive) &&
+              Global.phase == Phase.moving) {
+            widget.shapeTimer.cancel();
+            widget.dropTimer =
+                new Timer.periodic(new Duration(milliseconds: 50), (timer) {
+              if (Gameplay.isNextMovePossible()) {
+                setState(() {
+                  Gameplay.actorDown();
+                });
+              } else {
+                widget.dropTimer.cancel();
+                Gameplay.endActorSession();
+                if (Gameplay.isFinish()) {
+                  Global.resetInfoData();
+                  Global.eventBus.fire(new StatusEvent(type: Status.gameOver));
+                } else {
+                  Global.phase = Phase.matchRequest;
+                  startAutoMoveDown();
+                }
+              }
+            });
+          }
+          break;
+      }
+    // });
+
+    widget.statusSubs = Global.eventBus.on<StatusEvent>().listen((event) {
+      if (event.type == Status.gamePause) {
+        Global.isPause = event.isPause;
+        if (event.isPause) {
+          if (widget.shapeTimer != null) {
+            widget.shapeTimer.cancel();
+          }
+        } else {
+          startAutoMoveDown();
+        }
+      } else if (event.type == Status.replay) {
+        if (event.gameState == null) {
+          Gameplay.reinit();
+        }
+        Global.isPause = false;
+        Global.isGameOver = false;
+        widget.autoMoveDownDuration = 800;
+        Global.phase = Phase.moving;
+        Gameplay.doNextShape();
+        startAutoMoveDown();
+        if (mounted) {
+          setState(() {});
+        }
+      } else if (event.type == Status.proceed) {
+        Global.isPause = false;
+        Global.isGameOver = false;
+        Global.phase = Global.copyPhase;
+        startAutoMoveDown();
+        if (mounted) {
+          setState(() {});
+        }
+      } else if (event.type == Status.gameOver) {
+        Global.isGameOver = true;
+        if (widget.shapeTimer != null) {
+          widget.shapeTimer.cancel();
+        }
+      } else if (event.type == Status.retime) {
+        if (widget.shapeTimer != null &&
+            Global.isPause == false &&
+            Global.isGameOver == false &&
+            Global.phase == Phase.moving) {
+          widget.shapeTimer.cancel();
+          startAutoMoveDown();
+        }
+      }
+    });
+  }
+
+  startAutoMoveDown() {
+    widget.shapeTimer = new Timer.periodic(
+        new Duration(milliseconds: this.widget.autoMoveDownDuration), (timer) {
+      if (!Global.isPause &&
+          !Global.isGameOver &&
+          Global.phase != Phase.inactive &&
+          mounted) {
+        setState(() {
+          if (Global.playTime > 100 && widget.autoMoveDownDuration == 800) {
+            widget.autoMoveDownDuration = 600;
+            Global.eventBus.fire(new StatusEvent(type: Status.retime));
+          } else if (Global.playTime > 600 &&
+              widget.autoMoveDownDuration == 600) {
+            widget.autoMoveDownDuration = 400;
+            Global.eventBus.fire(new StatusEvent(type: Status.retime));
+          } else if (Global.playTime > 1200 &&
+              widget.autoMoveDownDuration == 400) {
+            widget.autoMoveDownDuration = 300;
+            Global.eventBus.fire(new StatusEvent(type: Status.retime));
+          }
+          if (Global.phase == Phase.moving) {
+            if (Gameplay.isNextMovePossible()) {
+              Gameplay.actorDown();
+            } else {
+              Gameplay.endActorSession();
+              if (Gameplay.isFinish()) {
+                Global.phase = Phase.inactive;
+                Global.eventBus.fire(new StatusEvent(type: Status.gameOver));
+              } else {
+                Global.phase = Phase.matchRequest;
+              }
+            }
+          } else if (Global.phase == Phase.drop) {
+            while (Gameplay.isNextMovePossible()) {
+              setState(() {
+                Gameplay.actorDown();
+              });
+            }
+            Global.phase = Phase.moving;
+          } else if (Global.phase == Phase.matchRequest) {
+            bool matched = Gameplay.matching();
+            if (matched) {
+              Global.phase = Phase.collapseRequest;
+            } else {
+              Gameplay.doNextShape();
+              Global.phase = Phase.moving;
+            }
+          } else if (Global.phase == Phase.collapseRequest) {
+            Gameplay.collapse();
+            Global.phase = Phase.matchRequest;
+          }
+        });
+      }
+    });
+  }
+
+  build() {
+    List<Row> rows = new List();
+
+    for (int row = 0; row < Global.vCount; row++) {
+      List<Cell> rowData = new List<Cell>();
+      for (int col = 0; col < Global.hCount; col++) {
+        var color;
+        if (Gameplay.actorPosCol == col &&
+            Gameplay.actorPosRow == row &&
+            _shouldBeActorVisible()) {
+          color = Gameplay.shape[0];
+        } else if (Gameplay.actorPosCol == col &&
+            Gameplay.actorPosRow == row - 1 &&
+            _shouldBeActorVisible()) {
+          color = Gameplay.shape[1];
+        } else if (Gameplay.actorPosCol == col &&
+            Gameplay.actorPosRow == row - 2 &&
+            _shouldBeActorVisible()) {
+          color = Gameplay.shape[2];
+        } else {
+          color = Gameplay.board[row][col];
+        }
+        rowData.add(new Cell(color: color, position: new Position(col, row)));
+      }
+
+      rows.add(new Row(children: rowData));
+    }
+
+    return new Column(children: rows);
+  }
+
+  _shouldBeActorVisible(): boolean {
+    return Global.phase == Phase.moving ||
+        (Global.phase == Phase.inactive && Gameplay.actorPosRow >= 0);
+  }
+}
