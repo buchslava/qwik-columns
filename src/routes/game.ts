@@ -2,16 +2,6 @@ export const w = "#ffffff";
 export const b = "#000000";
 
 export const customColors = [
-  //   "#4169E1", // Royal Blue
-  //   "#FF7F50", // Coral
-  //   "#DAA520", // Goldenrod
-  //   "#DA70D6", // Orchid
-  //   "#32CD32", // Lime Green
-  //   "#008080", // Teal
-  //   "#800000", // Maroon
-  //   "#00FFFF", // Aqua
-  //   "#FFDB58", // Mustard
-
   "#f34336", // Red
   "#4db14f", // Green
   "#b3ff5a", // Lime
@@ -27,6 +17,12 @@ export const randomColor = () =>
   customColors[Math.floor(Math.random() * customColors.length)];
 
 export const initData = [
+  [w, w, w, w, w, w, w],
+  [w, w, w, w, w, w, w],
+  [w, w, w, w, w, w, w],
+  [w, w, w, w, w, w, w],
+  [w, w, w, w, w, w, w],
+  [w, w, w, w, w, w, w],
   [w, w, w, w, w, w, w],
   [w, w, w, w, w, w, w],
   [w, w, w, w, w, w, w],

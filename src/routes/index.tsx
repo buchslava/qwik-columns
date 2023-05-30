@@ -28,14 +28,14 @@ import {
   randomColors,
   swapActorColors,
 } from "./game";
-
-export const BLOCK_SIZE = 15;
+import Controls from "./controls";
 
 export function render(
   game: Game,
   svgRef: Signal<Element | undefined>,
   width: number,
-  height: number
+  height: number,
+  blockSize: number
 ) {
   if (!svgRef.value) {
     return;
@@ -64,9 +64,9 @@ export function render(
             : game.board[i][j];
       }
       data.push({ x, y, value });
-      x += BLOCK_SIZE;
+      x += blockSize;
     }
-    y += BLOCK_SIZE;
+    y += blockSize;
   }
 
   svg
@@ -76,15 +76,15 @@ export function render(
     .append("g")
     .append("rect")
     .attr("x", (d) => d.x)
-    .attr("width", BLOCK_SIZE)
+    .attr("width", blockSize)
     .attr("y", (d) => d.y)
-    .attr("height", BLOCK_SIZE)
+    .attr("height", blockSize)
     // @ts-ignore
     .attr("fill", (d) => d3.color(d.value));
 }
 
 export default component$(() => {
-  const store = useStore({ width: 0, height: 0 });
+  const store = useStore({ width: 0, height: 0, blockSize: 0 });
   const svgRef = useSignal<Element>();
 
   const game: Game = {
@@ -101,7 +101,7 @@ export default component$(() => {
   useOnWindow(
     "resize",
     $(() => {
-      setSvgDimension(svgRef, store);
+      setSvgDimension(svgRef, store, game.board.length, game.board[0].length);
     })
   );
 
@@ -124,14 +124,14 @@ export default component$(() => {
       }
       if (shouldRender) {
         window.requestAnimationFrame(() => {
-          render(game, svgRef, store.width, store.height);
+          render(game, svgRef, store.width, store.height, store.blockSize);
         });
       }
     })
   );
 
   useVisibleTask$(({ cleanup }: { cleanup: Function }) => {
-    setSvgDimension(svgRef, store);
+    setSvgDimension(svgRef, store, game.board.length, game.board[0].length);
     const id = setInterval(() => {
       if (game.phase === Phase.MOVING) {
         if (isNextMovePossible(game)) {
@@ -163,7 +163,7 @@ export default component$(() => {
       }
 
       window.requestAnimationFrame(() => {
-        render(game, svgRef, store.width, store.height);
+        render(game, svgRef, store.width, store.height, store.blockSize);
       });
     }, 700);
     cleanup(() => clearInterval(id));
@@ -173,8 +173,20 @@ export default component$(() => {
     track(() => store.width);
     track(() => store.height);
 
-    render(game, svgRef, store.width, store.height);
+    render(game, svgRef, store.width, store.height, store.blockSize);
   });
 
-  return <svg class="chart" width="500" height="500" ref={svgRef} />;
+  return (
+    <div class="chart-container">
+      <svg class="chart" ref={svgRef} />
+      <Controls
+        onStart$={() => {
+          console.log("start");
+        }}
+        onStop$={() => {
+          console.log("stop");
+        }}
+      />
+    </div>
+  );
 });
