@@ -11,11 +11,15 @@ import {
 } from "@builder.io/qwik";
 import * as d3 from "d3";
 import { setSvgDimension } from "./utils";
+import type { Game } from "./game";
 import {
+  Phase,
   actorDown,
   collapse,
   doNextShape,
   endActorSession,
+  initActor,
+  initData,
   isFinish,
   isNextMovePossible,
   matching,
@@ -26,77 +30,6 @@ import {
 } from "./game";
 
 export const BLOCK_SIZE = 15;
-
-export const w = "#ffffff";
-export const b = "#000000";
-
-export const customColors = [
-  "#4169E1", // Royal Blue:
-  "#FF7F50", // Coral:
-  "#DAA520", // Goldenrod:
-  "#DA70D6", // Orchid:
-  "#32CD32", // Lime Green:
-  "#008080", // Teal
-  "#800000", // Maroon:
-  "#00FFFF", // Aqua:
-  "#FFDB58", //Mustard:
-];
-/**
- #A52A2A brown
- #FF0000 red
- #00FF00 green
- #0000FF blue
- #FFFF00 yellow
- #64dd17 light-green accent-4
- #330099 indigo
- #ff66be pink accent
- #008080 teal
-
-
- */
-
-export const initData = [
-  [w, w, w, w, w, w, w],
-  [w, w, w, w, w, w, w],
-  [w, w, w, w, w, w, w],
-  [w, w, w, w, w, w, w],
-  [w, w, w, w, w, w, w],
-  [w, w, w, w, w, w, w],
-  [w, w, w, w, w, w, w],
-  [w, w, w, w, w, w, w],
-  [w, w, w, w, w, w, w],
-  [w, w, w, w, w, w, w],
-  [w, w, w, w, w, w, w],
-  [w, w, w, w, w, w, w],
-  [w, w, w, w, w, w, w],
-  [w, w, w, w, w, w, w],
-  [w, w, w, w, w, w, w],
-];
-
-export const randomColor = () =>
-  customColors[Math.floor(Math.random() * customColors.length)];
-
-export const initActor = [randomColor(), randomColor(), randomColor()];
-
-export enum Phase {
-  INACTIVE,
-  PAUSED,
-  MOVING,
-  DROP,
-  MATCH_REQUEST,
-  COLLAPSE_REQUEST,
-}
-
-export interface Game {
-  board: string[][];
-  actor: {
-    state: string[];
-    x: number;
-    y: number;
-  };
-  phase: Phase;
-  nextActor: string[];
-}
 
 export function render(
   game: Game,
@@ -176,27 +109,23 @@ export default component$(() => {
     "keypress",
     $((event) => {
       const keyEvent = event as KeyboardEvent;
+      let shouldRender = false;
       if (keyEvent.code === "KeyA") {
         moveLeft(game);
-        render(game, svgRef, store.width, store.height);
+        shouldRender = true;
       } else if (keyEvent.code === "KeyD") {
         moveRight(game);
-        render(game, svgRef, store.width, store.height);
-      } else if (keyEvent.code === "KeyS") {
-        if (isNextMovePossible(game)) {
-          actorDown(game);
-        } else {
-          endActorSession(game);
-          if (isFinish(game)) {
-            ///
-          } else {
-            game.phase = Phase.MATCH_REQUEST;
-            // startAutoMoveDown();
-          }
-        }
+        shouldRender = true;
+      } else if (keyEvent.code === "KeyS" || keyEvent.code === "Space") {
+        game.phase = Phase.DROP;
       } else if (keyEvent.code === "KeyW") {
         swapActorColors(game);
-        render(game, svgRef, store.width, store.height);
+        shouldRender = true;
+      }
+      if (shouldRender) {
+        window.requestAnimationFrame(() => {
+          render(game, svgRef, store.width, store.height);
+        });
       }
     })
   );
@@ -233,7 +162,9 @@ export default component$(() => {
         game.phase = Phase.MATCH_REQUEST;
       }
 
-      render(game, svgRef, store.width, store.height);
+      window.requestAnimationFrame(() => {
+        render(game, svgRef, store.width, store.height);
+      });
     }, 700);
     cleanup(() => clearInterval(id));
   });

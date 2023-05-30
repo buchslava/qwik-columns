@@ -1,5 +1,75 @@
-import { b, randomColor, w } from ".";
-import type { Game } from ".";
+export const w = "#ffffff";
+export const b = "#000000";
+
+export const customColors = [
+  //   "#4169E1", // Royal Blue
+  //   "#FF7F50", // Coral
+  //   "#DAA520", // Goldenrod
+  //   "#DA70D6", // Orchid
+  //   "#32CD32", // Lime Green
+  //   "#008080", // Teal
+  //   "#800000", // Maroon
+  //   "#00FFFF", // Aqua
+  //   "#FFDB58", // Mustard
+
+  "#f34336", // Red
+  "#4db14f", // Green
+  "#b3ff5a", // Lime
+  "#feed3d", // Yellow
+  "#795547", // Brown
+  "#3e50b4", // Blue
+  "#2196f3", // Light Blue
+  "#008080", // Teal
+  "#FF00FF", // Fuchsia
+];
+
+export const randomColor = () =>
+  customColors[Math.floor(Math.random() * customColors.length)];
+
+export const initData = [
+  [w, w, w, w, w, w, w],
+  [w, w, w, w, w, w, w],
+  [w, w, w, w, w, w, w],
+  [w, w, w, w, w, w, w],
+  [w, w, w, w, w, w, w],
+  [w, w, w, w, w, w, w],
+  [w, w, w, w, w, w, w],
+  [w, w, w, w, w, w, w],
+  [w, w, w, w, w, w, w],
+  [w, w, w, w, w, w, w],
+  [w, w, w, w, w, w, w],
+  [w, w, w, w, w, w, w],
+  [w, w, w, w, w, w, w],
+  [w, w, w, w, w, w, w],
+  [w, w, w, w, w, w, w],
+];
+export const initActor = [randomColor(), randomColor(), randomColor()];
+
+export enum Phase {
+  INACTIVE,
+  PAUSED,
+  MOVING,
+  DROP,
+  MATCH_REQUEST,
+  COLLAPSE_REQUEST,
+}
+
+export interface Actor {
+  state: string[];
+  x: number;
+  y: number;
+}
+
+export interface Game {
+  board: string[][];
+  actor: {
+    state: string[];
+    x: number;
+    y: number;
+  };
+  phase: Phase;
+  nextActor: string[];
+}
 
 export function matching(game: Game, customBoard?: string[][]) {
   const board = customBoard ?? game.board;
@@ -306,10 +376,10 @@ export function isNextMovePossible(game: Game) {
   const { board } = game;
   const rowsQty = board.length;
 
-  if (game.actor.y + 3 >= rowsQty) {
+  if (game.actor.y + 2 >= rowsQty) {
     return false;
   }
-  if (board[game.actor.y + 3][game.actor.x] !== w) {
+  if (board[game.actor.y + 2][game.actor.x] !== w) {
     return false;
   }
 
@@ -320,14 +390,14 @@ export function endActorSession(game: Game) {
   const { actor, board } = game;
   const { state } = actor;
 
+  if (actor.y - 1 >= 0) {
+    board[actor.y - 1][actor.x] = state[2];
+  }
   if (actor.y >= 0) {
-    board[actor.y][actor.x] = state[2];
+    board[actor.y][actor.x] = state[1];
   }
   if (actor.y + 1 >= 0) {
-    board[actor.y + 1][actor.x] = state[1];
-  }
-  if (actor.y + 2 >= 0) {
-    board[actor.y + 2][actor.x] = state[0];
+    board[actor.y + 1][actor.x] = state[0];
   }
 }
 
@@ -338,14 +408,14 @@ export function isFinish(game: Game): boolean {
 
   const getNextBoard = (): string[][] => {
     const result = board.map((a) => a.slice());
+    if (actor.y - 1 >= 0) {
+      result[actor.y - 1][actor.x] = state[0];
+    }
     if (actor.y >= 0) {
-      result[actor.y][actor.x] = state[0];
+      result[actor.y][actor.x] = state[1];
     }
     if (actor.y + 1 >= 0) {
-      result[actor.y + 1][actor.x] = state[1];
-    }
-    if (actor.y + 2 >= 0) {
-      result[actor.y + 2][actor.x] = state[2];
+      result[actor.y + 1][actor.x] = state[2];
     }
     return result;
   };
