@@ -446,7 +446,7 @@ export function init(game: Game) {
   game.score = 0;
 }
 
-export function isShapeEmpty(game: Game): boolean {
+export function isActorEmpty(game: Game): boolean {
   const { actor } = game;
   const { state } = actor;
   return state[0] === w || state[1] === w || state[2] === w;
@@ -457,13 +457,6 @@ export function isNextActorInit(game: Game): boolean {
   return nextActor[0] !== w;
 }
 
-export function initShape(game: Game) {
-  const { actor, nextActor } = game;
-  for (let i = 0; i < actor.state.length; i++) {
-    nextActor[i] = randomColor();
-  }
-}
-
 export function randomColors(n: number): string[] {
   const res = [];
   for (let i = 0; i < n; i++) {
@@ -472,7 +465,7 @@ export function randomColors(n: number): string[] {
   return res;
 }
 
-export function doNextShape(game: Game) {
+export function doNextActor(game: Game) {
   const { board, actor, nextActor } = game;
   const { state } = actor;
   const columnsQty = board[0].length;
@@ -482,7 +475,10 @@ export function doNextShape(game: Game) {
   }
   actor.x = Math.floor(columnsQty / 2);
   actor.y = -2;
-  initShape(game);
+
+  for (let i = 0; i < actor.state.length; i++) {
+    nextActor[i] = randomColor();
+  }
 }
 
 export function actorDown(game: Game) {

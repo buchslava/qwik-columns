@@ -2,16 +2,15 @@ import type { PropFunction, Signal } from "@builder.io/qwik";
 import { useSignal } from "@builder.io/qwik";
 import { component$ } from "@builder.io/qwik";
 import * as d3 from "d3";
+import type { Game } from "./game";
 import { Phase } from "./game";
 
 interface ControlsProps {
-  nextActor: string[];
+  game: Game;
+  onStart$: PropFunction<() => void>;
+  onPause$: PropFunction<() => void>;
+  onStop$: PropFunction<() => void>;
   blockSize: number;
-  score: number;
-  onStart$?: PropFunction<() => void>;
-  onPause$?: PropFunction<() => void>;
-  onStop$?: PropFunction<() => void>;
-  phase: Phase;
 }
 
 export function renderNextActor(
@@ -32,7 +31,7 @@ export function renderNextActor(
 
   const displayData = data.map((d, i) => ({
     value: d,
-    y: i * size,
+    y: (data.length - 1) * size - i * size,
     size,
   }));
 
@@ -51,23 +50,23 @@ export function renderNextActor(
 }
 
 export default component$<ControlsProps>(
-  ({ onStart$, onPause$, onStop$, nextActor, score, blockSize, phase }) => {
+  ({ onStart$, onPause$, onStop$, game, blockSize }) => {
     const svgRef = useSignal<Element>();
 
-    renderNextActor(nextActor, blockSize, svgRef);
+    renderNextActor(game.nextActor, blockSize, svgRef);
 
     return (
       <div class="relative text-white w-72 h-48">
         <div class="pl-3 pt-10 inset-x-0 top-0">
-          <div class="mb-5 text-2xl font-extrabold">SCORE: {score}</div>
+          <div class="mb-5 text-2xl font-extrabold">SCORE: {game.score}</div>
           <div class="mb-5">
             <svg
               width={blockSize}
-              height={blockSize * nextActor.length}
+              height={blockSize * game.nextActor.length}
               ref={svgRef}
             />
           </div>
-          {phase === Phase.INACTIVE && (
+          {game.phase === Phase.INACTIVE && (
             <div class="mb-5">
               <button
                 onClick$={onStart$}
@@ -78,19 +77,19 @@ export default component$<ControlsProps>(
               </button>
             </div>
           )}
-          {phase !== Phase.INACTIVE && (
+          {game.phase !== Phase.INACTIVE && (
             <div class="mb-5">
               <button
                 onClick$={onPause$}
                 type="button"
                 class="px-8 py-3 w-32 text-white bg-blue-300 rounded focus:outline-none"
               >
-                {phase === Phase.PAUSED ? "GO" : "PAUSE"}
+                {game.phase === Phase.PAUSED ? "GO" : "PAUSE"}
               </button>
             </div>
           )}
 
-          {phase !== Phase.INACTIVE && (
+          {game.phase !== Phase.INACTIVE && (
             <div class="mb-5">
               <button
                 onClick$={onStop$}

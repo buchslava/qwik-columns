@@ -16,7 +16,7 @@ import {
   Phase,
   actorDown,
   collapse,
-  doNextShape,
+  doNextActor,
   endActorSession,
   initActor,
   initData,
@@ -29,6 +29,7 @@ import {
   swapActorColors,
   init,
   pause,
+  w,
 } from "./game";
 import Controls from "./controls";
 
@@ -49,6 +50,16 @@ export function render(
     .attr("height", height)
     .append("g")
     .attr("transform", "translate(0,0)");
+
+  svg
+    .append("g")
+    .append("rect")
+    .attr("x", 0)
+    .attr("width", width)
+    .attr("y", 0)
+    .attr("height", height)
+    // @ts-ignore
+    .attr("fill", () => d3.color(w));
 
   const data = [];
   for (let i = 0, x = 0, y = 0; i < game.board.length; i++) {
@@ -85,8 +96,17 @@ export function render(
     .attr("fill", (d) => d3.color(d.value));
 }
 
+export interface MainStore {
+  width: number;
+  height: number;
+  game: Game;
+  blockSize: number;
+  gameOverPopup: boolean;
+}
+
 export default component$(() => {
-  const store = useStore({
+  // https://qwik.builder.io/docs/concepts/reactivity/#deep-objects
+  const store = useStore<MainStore>({
     width: 0,
     height: 0,
     game: {
@@ -102,7 +122,7 @@ export default component$(() => {
       score: 0,
     },
     blockSize: 0,
-    gameOver: false,
+    gameOverPopup: false,
   });
   const containerRef = useSignal<Element>();
   const svgRef = useSignal<Element>();
@@ -110,13 +130,7 @@ export default component$(() => {
   useOnWindow(
     "resize",
     $(() => {
-      setSvgDimension(
-        containerRef,
-        // todo
-        store,
-        store.game.board.length,
-        store.game.board[0].length
-      );
+      setSvgDimension(containerRef, store);
     })
   );
 
@@ -152,12 +166,7 @@ export default component$(() => {
   );
 
   useVisibleTask$(({ cleanup }: { cleanup: Function }) => {
-    setSvgDimension(
-      containerRef,
-      store,
-      store.game.board.length,
-      store.game.board[0].length
-    );
+    setSvgDimension(containerRef, store);
     const id = setInterval(() => {
       const game = store.game;
 
@@ -168,7 +177,7 @@ export default component$(() => {
           endActorSession(game);
           if (isFinish(game)) {
             game.phase = Phase.INACTIVE;
-            store.gameOver = true;
+            store.gameOverPopup = true;
           } else {
             game.phase = Phase.MATCH_REQUEST;
           }
@@ -183,7 +192,7 @@ export default component$(() => {
         if (matched) {
           game.phase = Phase.COLLAPSE_REQUEST;
         } else {
-          doNextShape(game);
+          doNextActor(game);
           game.phase = Phase.MOVING;
         }
       } else if (game.phase === Phase.COLLAPSE_REQUEST) {
@@ -199,9 +208,18 @@ export default component$(() => {
   });
 
   useTask$(({ track }: { track: Function }) => {
+    track(() => store.gameOverPopup);
+
+    if (store.gameOverPopup) {
+      setTimeout(() => {
+        store.gameOverPopup = false;
+      }, 5000);
+    }
+  });
+
+  useTask$(({ track }: { track: Function }) => {
     track(() => store.width);
     track(() => store.height);
-    track(() => store.blockSize);
     track(() => store.game);
 
     render(store.game, svgRef, store.width, store.height, store.blockSize);
@@ -209,7 +227,7 @@ export default component$(() => {
 
   return (
     <div class="flex justify-center w-screen h-screen pt-5" ref={containerRef}>
-      {store.gameOver && (
+      {store.gameOverPopup && (
         <div class="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 z-50 w-72 opacity-60 text-center max-w-sm p-6 bg-white text-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
           GAME OVER
         </div>
@@ -224,13 +242,11 @@ export default component$(() => {
         />
       </div>
       <Controls
-        phase={store.game.phase}
-        score={store.game.score}
-        nextActor={store.game.nextActor}
+        game={store.game}
         blockSize={15}
         onStart$={() => {
           init(store.game);
-          store.gameOver = false;
+          store.gameOverPopup = false;
           store.game.phase = Phase.MOVING;
         }}
         onPause$={() => {
@@ -238,7 +254,7 @@ export default component$(() => {
         }}
         onStop$={() => {
           store.game.phase = Phase.INACTIVE;
-          store.gameOver = true;
+          store.gameOverPopup = true;
         }}
       />
     </div>
