@@ -8,8 +8,9 @@ export function setSvgDimension(
 ) {
   if (svgRef?.value) {
     const { height } = svgRef.value.getBoundingClientRect();
-    const newHeight = Math.floor((height * 5) / 6);
-    const blockSize = Math.floor(newHeight / rows);
+
+    const newHeight = (height * 5) / 6;
+    const blockSize = newHeight / rows;
     const newWidth = blockSize * columns;
 
     store.width = newWidth;

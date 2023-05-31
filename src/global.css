@@ -1,3 +1,11 @@
+/**
+ * Tailwind CSS imports
+ * View the full documentation at https://tailwindcss.com
+ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
   background-color: #5b5b5b;
   font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
@@ -8,12 +16,6 @@ body {
   height: 100vh;
 }
 
-.chart-container {
-  display: flex;
-  width: 100%;
-  height: 100%;
-}
-
-.chart {
+.game-area {
   margin: 0 auto;
 }

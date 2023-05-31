@@ -64,7 +64,9 @@ export interface Game {
     y: number;
   };
   phase: Phase;
+  savedPhase: Phase;
   nextActor: string[];
+  score: number;
 }
 
 export function matching(game: Game, customBoard?: string[][]) {
@@ -324,7 +326,7 @@ export function matching(game: Game, customBoard?: string[][]) {
         if (match[row][col]) {
           if (mark) {
             board[row][col] = b;
-            // score++;
+            game.score++;
           }
           result = true;
         }
@@ -437,20 +439,11 @@ export function swapActorColors(game: Game) {
 }
 
 export function init(game: Game) {
-  const { board, actor } = game;
-  const columnsQty = board[0].length;
-  const rowsQty = board.length;
-
-  // score = 0;
-  for (let row = 0; row < rowsQty; row++) {
-    const rowContent = [];
-    for (let col = 0; col < columnsQty; col++) {
-      rowContent.push(w);
-    }
-    board.push(rowContent);
-  }
-  actor.x = Math.floor(columnsQty / 2);
-  actor.y = -2;
+  game.board = initData.map((a) => a.slice());
+  const columnsQty = game.board[0].length;
+  game.actor.x = Math.floor(columnsQty / 2);
+  game.actor.y = -2;
+  game.score = 0;
 }
 
 export function isShapeEmpty(game: Game): boolean {
@@ -479,10 +472,6 @@ export function randomColors(n: number): string[] {
   return res;
 }
 
-export function initNextShape(game: Game) {
-  initShape(game);
-}
-
 export function doNextShape(game: Game) {
   const { board, actor, nextActor } = game;
   const { state } = actor;
@@ -493,7 +482,7 @@ export function doNextShape(game: Game) {
   }
   actor.x = Math.floor(columnsQty / 2);
   actor.y = -2;
-  initNextShape(game);
+  initShape(game);
 }
 
 export function actorDown(game: Game) {
@@ -554,4 +543,13 @@ export function moveRight(game: Game) {
 export function moveRightTo(game: Game, pos: number) {
   const { actor } = game;
   while (moveRight(game) && actor.x != pos);
+}
+
+export function pause(game: Game) {
+  if (game.phase === Phase.PAUSED) {
+    game.phase = game.savedPhase;
+  } else {
+    game.savedPhase = game.phase;
+    game.phase = Phase.PAUSED;
+  }
 }

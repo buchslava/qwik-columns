@@ -27,6 +27,8 @@ import {
   moveRight,
   randomColors,
   swapActorColors,
+  init,
+  pause,
 } from "./game";
 import Controls from "./controls";
 
@@ -53,7 +55,7 @@ export function render(
     x = 0;
     for (let j = 0; j < game.board[i].length; j++) {
       let value = game.board[i][j];
-      if (game.phase == Phase.MOVING) {
+      if (game.phase == Phase.MOVING || game.phase === Phase.PAUSED) {
         value =
           game.actor.x === j && game.actor.y === i
             ? game.actor.state[0]
@@ -84,24 +86,37 @@ export function render(
 }
 
 export default component$(() => {
-  const store = useStore({ width: 0, height: 0, blockSize: 0 });
-  const svgRef = useSignal<Element>();
-
-  const game: Game = {
-    board: [...initData],
-    actor: {
-      state: [...initActor],
-      x: 3,
-      y: -2,
+  const store = useStore({
+    width: 0,
+    height: 0,
+    game: {
+      board: [...initData],
+      actor: {
+        state: [...initActor],
+        x: 3,
+        y: -2,
+      },
+      phase: Phase.INACTIVE,
+      savedPhase: Phase.INACTIVE,
+      nextActor: randomColors(3),
+      score: 0,
     },
-    phase: Phase.MOVING,
-    nextActor: randomColors(3),
-  };
+    blockSize: 0,
+    gameOver: false,
+  });
+  const containerRef = useSignal<Element>();
+  const svgRef = useSignal<Element>();
 
   useOnWindow(
     "resize",
     $(() => {
-      setSvgDimension(svgRef, store, game.board.length, game.board[0].length);
+      setSvgDimension(
+        containerRef,
+        // todo
+        store,
+        store.game.board.length,
+        store.game.board[0].length
+      );
     })
   );
 
@@ -111,28 +126,41 @@ export default component$(() => {
       const keyEvent = event as KeyboardEvent;
       let shouldRender = false;
       if (keyEvent.code === "KeyA") {
-        moveLeft(game);
+        moveLeft(store.game);
         shouldRender = true;
       } else if (keyEvent.code === "KeyD") {
-        moveRight(game);
+        moveRight(store.game);
         shouldRender = true;
       } else if (keyEvent.code === "KeyS" || keyEvent.code === "Space") {
-        game.phase = Phase.DROP;
+        store.game.phase = Phase.DROP;
       } else if (keyEvent.code === "KeyW") {
-        swapActorColors(game);
+        swapActorColors(store.game);
         shouldRender = true;
       }
       if (shouldRender) {
         window.requestAnimationFrame(() => {
-          render(game, svgRef, store.width, store.height, store.blockSize);
+          render(
+            store.game,
+            svgRef,
+            store.width,
+            store.height,
+            store.blockSize
+          );
         });
       }
     })
   );
 
   useVisibleTask$(({ cleanup }: { cleanup: Function }) => {
-    setSvgDimension(svgRef, store, game.board.length, game.board[0].length);
+    setSvgDimension(
+      containerRef,
+      store,
+      store.game.board.length,
+      store.game.board[0].length
+    );
     const id = setInterval(() => {
+      const game = store.game;
+
       if (game.phase === Phase.MOVING) {
         if (isNextMovePossible(game)) {
           actorDown(game);
@@ -140,6 +168,7 @@ export default component$(() => {
           endActorSession(game);
           if (isFinish(game)) {
             game.phase = Phase.INACTIVE;
+            store.gameOver = true;
           } else {
             game.phase = Phase.MATCH_REQUEST;
           }
@@ -172,19 +201,44 @@ export default component$(() => {
   useTask$(({ track }: { track: Function }) => {
     track(() => store.width);
     track(() => store.height);
+    track(() => store.blockSize);
+    track(() => store.game);
 
-    render(game, svgRef, store.width, store.height, store.blockSize);
+    render(store.game, svgRef, store.width, store.height, store.blockSize);
   });
 
   return (
-    <div class="chart-container">
-      <svg class="chart" ref={svgRef} />
+    <div class="flex justify-center w-screen h-screen pt-5" ref={containerRef}>
+      {store.gameOver && (
+        <div class="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 z-50 w-72 opacity-60 text-center max-w-sm p-6 bg-white text-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+          GAME OVER
+        </div>
+      )}
+
+      <div>
+        <svg
+          class="game-area"
+          width={store.width}
+          height={store.height}
+          ref={svgRef}
+        />
+      </div>
       <Controls
+        phase={store.game.phase}
+        score={store.game.score}
+        nextActor={store.game.nextActor}
+        blockSize={15}
         onStart$={() => {
-          console.log("start");
+          init(store.game);
+          store.gameOver = false;
+          store.game.phase = Phase.MOVING;
+        }}
+        onPause$={() => {
+          pause(store.game);
         }}
         onStop$={() => {
-          console.log("stop");
+          store.game.phase = Phase.INACTIVE;
+          store.gameOver = true;
         }}
       />
     </div>
