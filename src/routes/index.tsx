@@ -12,6 +12,7 @@ import {
 import * as d3 from "d3";
 import { setSvgDimension } from "./utils";
 import type { Game } from "./game";
+import { clone } from "./game";
 import {
   Phase,
   actorDown,
@@ -38,7 +39,8 @@ export function render(
   svgRef: Signal<Element | undefined>,
   width: number,
   height: number,
-  blockSize: number
+  blockSize: number,
+  passThroughSteps?: number
 ) {
   if (!svgRef.value) {
     return;
@@ -65,18 +67,7 @@ export function render(
   for (let i = 0, x = 0, y = 0; i < game.board.length; i++) {
     x = 0;
     for (let j = 0; j < game.board[i].length; j++) {
-      let value = game.board[i][j];
-      if (game.phase == Phase.MOVING || game.phase === Phase.PAUSED) {
-        value =
-          game.actor.x === j && game.actor.y === i
-            ? game.actor.state[0]
-            : game.actor.x === j && game.actor.y === i + 1
-            ? game.actor.state[1]
-            : game.actor.x === j && game.actor.y === i + 2
-            ? game.actor.state[2]
-            : game.board[i][j];
-      }
-      data.push({ x, y, value });
+      data.push({ x, y, value: game.board[i][j] });
       x += blockSize;
     }
     y += blockSize;
@@ -94,6 +85,50 @@ export function render(
     .attr("height", blockSize)
     // @ts-ignore
     .attr("fill", (d) => d3.color(d.value));
+
+  if (
+    game.phase === Phase.MOVING ||
+    game.phase === Phase.PAUSED ||
+    game.phase === Phase.DROP
+  ) {
+    const actorData = [];
+    for (let i = 0; i < game.actor.state.length; i++) {
+      actorData.push({
+        x: game.actor.x * blockSize,
+        y: (game.actor.y + i - 1) * blockSize,
+        value: game.actor.state[i],
+      });
+    }
+
+    svg
+      .selectAll()
+      .data(actorData)
+      .enter()
+      .append("g")
+      .append("rect")
+      .attr("class", "could-fly")
+      .attr("x", (d) => d.x)
+      .attr("width", blockSize)
+      .attr("y", (d) => d.y)
+      .attr("height", blockSize)
+      // @ts-ignore
+      .attr("fill", (d) => d3.color(d.value));
+
+    if (passThroughSteps) {
+      game.phase = Phase.FLYING;
+      svg
+        .selectAll(".could-fly")
+        .transition()
+        .duration(1000)
+        .attr("y", (d: any) => d.y + passThroughSteps * blockSize)
+        // don't mix with on('end', ...)
+        .end()
+        .then(() => {
+          actorDown(game, passThroughSteps);
+          game.phase = Phase.MOVING;
+        });
+    }
+  }
 }
 
 export interface MainStore {
@@ -113,7 +148,7 @@ export default component$(() => {
       board: [...initData],
       actor: {
         state: [...initActor],
-        x: 3,
+        x: Math.floor(initData[0].length / 2),
         y: -2,
       },
       phase: Phase.INACTIVE,
@@ -138,6 +173,10 @@ export default component$(() => {
     "keypress",
     $((event) => {
       const keyEvent = event as KeyboardEvent;
+      const { phase } = store.game;
+      if (phase !== Phase.MOVING) {
+        return;
+      }
       let shouldRender = false;
       if (keyEvent.code === "KeyA") {
         moveLeft(store.game);
@@ -170,6 +209,10 @@ export default component$(() => {
     const id = setInterval(() => {
       const game = store.game;
 
+      if (game.phase === Phase.FLYING) {
+        return;
+      }
+
       if (game.phase === Phase.MOVING) {
         if (isNextMovePossible(game)) {
           actorDown(game);
@@ -183,10 +226,32 @@ export default component$(() => {
           }
         }
       } else if (game.phase === Phase.DROP) {
-        while (isNextMovePossible(game)) {
-          actorDown(game);
+        const gameClone = clone(game);
+
+        let steps = 0;
+        while (isNextMovePossible(gameClone)) {
+          actorDown(gameClone);
+          steps++;
         }
-        game.phase = Phase.MOVING;
+        window.requestAnimationFrame(() => {
+          render(
+            game,
+            svgRef,
+            store.width,
+            store.height,
+            store.blockSize,
+            steps
+          );
+        });
+
+        // while (isNextMovePossible(game)) {
+        //   actorDown(game);
+        // }
+        // game.phase = Phase.MOVING;
+        // setTimeout(() => {
+        //   game.phase = Phase.MOVING;
+        // }, 500);
+        return;
       } else if (game.phase === Phase.MATCH_REQUEST) {
         const matched = matching(game)(true);
         if (matched) {

@@ -31,7 +31,7 @@ export function renderNextActor(
 
   const displayData = data.map((d, i) => ({
     value: d,
-    y: (data.length - 1) * size - i * size,
+    y: i * size,
     size,
   }));
 

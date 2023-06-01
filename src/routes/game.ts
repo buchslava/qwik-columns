@@ -46,6 +46,7 @@ export enum Phase {
   PAUSED,
   MOVING,
   DROP,
+  FLYING,
   MATCH_REQUEST,
   COLLAPSE_REQUEST,
 }
@@ -67,6 +68,15 @@ export interface Game {
   savedPhase: Phase;
   nextActor: string[];
   score: number;
+}
+
+export function clone(game: Game): Game {
+  return {
+    ...game,
+    nextActor: [...game.nextActor],
+    board: game.board.map((a) => a.slice()),
+    actor: { ...game.actor },
+  };
 }
 
 export function matching(game: Game, customBoard?: string[][]) {
@@ -389,15 +399,15 @@ export function endActorSession(game: Game) {
   const { state } = actor;
 
   if (actor.y - 1 >= 0) {
-    board[actor.y - 1][actor.x] = state[2];
+    board[actor.y - 1][actor.x] = state[0];
   }
   if (actor.y >= 0) {
     board[actor.y][actor.x] = state[1];
   }
   if (actor.y + 1 >= 0) {
-    board[actor.y + 1][actor.x] = state[0];
+    board[actor.y + 1][actor.x] = state[2];
   }
-}
+}  
 
 export function isFinish(game: Game): boolean {
   const { board, actor } = game;
@@ -481,8 +491,8 @@ export function doNextActor(game: Game) {
   }
 }
 
-export function actorDown(game: Game) {
-  game.actor.y++;
+export function actorDown(game: Game, extent = 1) {
+  game.actor.y += extent;
 }
 
 export function moveHorTo(game: Game, pos: number) {
