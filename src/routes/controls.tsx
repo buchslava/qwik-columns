@@ -58,7 +58,9 @@ export default component$<ControlsProps>(
     return (
       <div class="relative text-white w-72 h-48">
         <div class="pl-3 pt-10 inset-x-0 top-0">
-          <div class="mb-5 text-2xl font-extrabold">SCORE: {game.score}</div>
+          <div class="mb-5 text-2xl font-extrabold font-mono">
+            SCORE: {game.score}
+          </div>
           <div class="mb-5">
             <svg
               width={blockSize}
@@ -71,7 +73,7 @@ export default component$<ControlsProps>(
               <button
                 onClick$={onStart$}
                 type="button"
-                class="px-8 py-3 w-32 text-white bg-pink-300 rounded focus:outline-none"
+                class="font-mono px-8 py-3 w-32 text-white bg-pink-300 rounded focus:outline-none"
               >
                 START
               </button>
@@ -82,7 +84,7 @@ export default component$<ControlsProps>(
               <button
                 onClick$={onPause$}
                 type="button"
-                class="px-8 py-3 w-32 text-white bg-blue-300 rounded focus:outline-none"
+                class="font-mono px-8 py-3 w-32 text-white bg-blue-300 rounded focus:outline-none"
               >
                 {game.phase === Phase.PAUSED ? "GO" : "PAUSE"}
               </button>
@@ -94,12 +96,23 @@ export default component$<ControlsProps>(
               <button
                 onClick$={onStop$}
                 type="button"
-                class="px-8 py-3 w-32 text-white bg-gray-300 rounded focus:outline-none"
+                class="font-mono px-8 py-3 w-32 text-white bg-gray-300 rounded focus:outline-none"
               >
                 STOP
               </button>
             </div>
           )}
+        </div>
+        <div class="mb-5 pl-3 font-mono text-xl font-bold">CONTROLS</div>
+        <div class="mb-5 pl-3 font-mono text-lg">
+          [A] - left
+          <br />
+          [D] - right
+          <br />
+          [W] - swap colors
+          <br />
+          [D] or
+          <br /> [Space] - drop
         </div>
       </div>
     );

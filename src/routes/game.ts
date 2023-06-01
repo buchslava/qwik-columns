@@ -114,8 +114,8 @@ export enum Phase {
 
 export interface Actor {
   state: ColumnsColor[];
-  x: number;
-  y: number;
+  column: number;
+  row: number;
 }
 
 export interface Game {
@@ -441,10 +441,10 @@ export function isNextMovePossible(game: Game) {
   const { board } = game;
   const rowsQty = board.length;
 
-  if (game.actor.y + 2 >= rowsQty) {
+  if (game.actor.row + 2 >= rowsQty) {
     return false;
   }
-  if (board[game.actor.y + 2][game.actor.x] !== w) {
+  if (board[game.actor.row + 2][game.actor.column] !== w) {
     return false;
   }
 
@@ -455,14 +455,14 @@ export function endActorSession(game: Game) {
   const { actor, board } = game;
   const { state } = actor;
 
-  if (actor.y - 1 >= 0) {
-    board[actor.y - 1][actor.x] = state[0];
+  if (actor.row - 1 >= 0) {
+    board[actor.row - 1][actor.column] = state[0];
   }
-  if (actor.y >= 0) {
-    board[actor.y][actor.x] = state[1];
+  if (actor.row >= 0) {
+    board[actor.row][actor.column] = state[1];
   }
-  if (actor.y + 1 >= 0) {
-    board[actor.y + 1][actor.x] = state[2];
+  if (actor.row + 1 >= 0) {
+    board[actor.row + 1][actor.column] = state[2];
   }
 }
 
@@ -473,14 +473,14 @@ export function isFinish(game: Game): boolean {
 
   const getNextBoard = (): ColumnsColor[][] => {
     const result = board.map((a) => a.slice());
-    if (actor.y - 1 >= 0) {
-      result[actor.y - 1][actor.x] = state[0];
+    if (actor.row - 1 >= 0) {
+      result[actor.row - 1][actor.column] = state[0];
     }
-    if (actor.y >= 0) {
-      result[actor.y][actor.x] = state[1];
+    if (actor.row >= 0) {
+      result[actor.row][actor.column] = state[1];
     }
-    if (actor.y + 1 >= 0) {
-      result[actor.y + 1][actor.x] = state[2];
+    if (actor.row + 1 >= 0) {
+      result[actor.row + 1][actor.column] = state[2];
     }
     return result;
   };
@@ -508,8 +508,8 @@ export function swapActorColors(game: Game) {
 export function init(game: Game) {
   game.board = initData.map((a) => a.slice());
   const columnsQty = game.board[0].length;
-  game.actor.x = Math.floor(columnsQty / 2);
-  game.actor.y = -2;
+  game.actor.column = Math.floor(columnsQty / 2);
+  game.actor.row = -2;
   game.score = 0;
 }
 
@@ -540,8 +540,8 @@ export function doNextActor(game: Game) {
   for (let i = 0; i < state.length; i++) {
     state[i] = nextActor[i];
   }
-  actor.x = Math.floor(columnsQty / 2);
-  actor.y = -2;
+  actor.column = Math.floor(columnsQty / 2);
+  actor.row = -2;
 
   for (let i = 0; i < actor.state.length; i++) {
     nextActor[i] = randomColor();
@@ -549,7 +549,7 @@ export function doNextActor(game: Game) {
 }
 
 export function actorDown(game: Game, extent = 1) {
-  game.actor.y += extent;
+  game.actor.row += extent;
 }
 
 export function moveHorTo(game: Game, pos: number) {
@@ -557,9 +557,9 @@ export function moveHorTo(game: Game, pos: number) {
   const rowsQty = board.length;
 
   if (pos !== null && pos >= 0 && pos <= rowsQty) {
-    if (pos < actor.x) {
+    if (pos < actor.column) {
       moveLeftTo(game, pos);
-    } else if (pos > actor.x) {
+    } else if (pos > actor.column) {
       moveRightTo(game, pos);
     }
   }
@@ -568,13 +568,13 @@ export function moveHorTo(game: Game, pos: number) {
 export function moveLeft(game: Game): boolean {
   const { board, actor } = game;
 
-  if (actor.x - 1 >= 0) {
+  if (actor.column - 1 >= 0) {
     if (
-      (actor.y < 0 || board[actor.y][actor.x - 1] === w) &&
-      (actor.y < 0 || board[actor.y + 1][actor.x - 1] === w) &&
-      (actor.y < 0 || board[actor.y + 2][actor.x - 1] === w)
+      (actor.row < 0 || board[actor.row][actor.column - 1] === w) &&
+      (actor.row < 0 || board[actor.row + 1][actor.column - 1] === w) &&
+      (actor.row < 0 || board[actor.row + 2][actor.column - 1] === w)
     ) {
-      actor.x--;
+      actor.column--;
       return true;
     }
   }
@@ -583,20 +583,20 @@ export function moveLeft(game: Game): boolean {
 
 export function moveLeftTo(game: Game, pos: number) {
   const { actor } = game;
-  while (moveLeft(game) && actor.x !== pos);
+  while (moveLeft(game) && actor.column !== pos);
 }
 
 export function moveRight(game: Game) {
   const { board, actor } = game;
   const columnsQty = board[0].length;
 
-  if (actor.x + 1 < columnsQty) {
+  if (actor.column + 1 < columnsQty) {
     if (
-      (actor.y < 0 || board[actor.y][actor.x + 1] === w) &&
-      (actor.y < 0 || board[actor.y + 1][actor.x + 1] === w) &&
-      (actor.y < 0 || board[actor.y + 2][actor.x + 1] === w)
+      (actor.row < 0 || board[actor.row][actor.column + 1] === w) &&
+      (actor.row < 0 || board[actor.row + 1][actor.column + 1] === w) &&
+      (actor.row < 0 || board[actor.row + 2][actor.column + 1] === w)
     ) {
-      actor.x++;
+      actor.column++;
       return true;
     }
   }
@@ -605,7 +605,7 @@ export function moveRight(game: Game) {
 
 export function moveRightTo(game: Game, pos: number) {
   const { actor } = game;
-  while (moveRight(game) && actor.x != pos);
+  while (moveRight(game) && actor.column != pos);
 }
 
 export function pause(game: Game) {

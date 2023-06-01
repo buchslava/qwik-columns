@@ -11,7 +11,8 @@ import {
 } from "@builder.io/qwik";
 import * as d3 from "d3";
 import { setSvgDimension } from "./utils";
-import { COLOR_WHITE, Game } from "./game";
+import type { Game } from "./game";
+import { COLOR_WHITE } from "./game";
 import { clone } from "./game";
 import {
   Phase,
@@ -93,8 +94,8 @@ export function render(
     const actorData = [];
     for (let i = 0; i < game.actor.state.length; i++) {
       actorData.push({
-        x: game.actor.x * blockSize,
-        y: (game.actor.y + i - 1) * blockSize,
+        x: game.actor.column * blockSize,
+        y: (game.actor.row + i - 1) * blockSize,
         value: game.actor.state[i],
       });
     }
@@ -147,8 +148,8 @@ export default component$(() => {
       board: [...initData],
       actor: {
         state: [...initActor],
-        x: Math.floor(initData[0].length / 2),
-        y: -2,
+        column: Math.floor(initData[0].length / 2),
+        row: -2,
       },
       phase: Phase.INACTIVE,
       savedPhase: Phase.INACTIVE,
