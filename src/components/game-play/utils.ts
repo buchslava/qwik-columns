@@ -1,5 +1,5 @@
 import type { Signal } from "@builder.io/qwik";
-import type { MainStore } from ".";
+import type { MainStore } from "./game";
 
 export function setSvgDimension(
   svgRef: Signal<Element | undefined>,

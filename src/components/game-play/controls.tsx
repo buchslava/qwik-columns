@@ -2,8 +2,8 @@ import type { PropFunction, Signal } from "@builder.io/qwik";
 import { useSignal } from "@builder.io/qwik";
 import { component$ } from "@builder.io/qwik";
 import * as d3 from "d3";
-import type { Game } from "./game";
-import { Phase } from "./game";
+import type { Game } from "./game-logic";
+import { Phase } from "./game-logic";
 
 interface ControlsProps {
   game: Game;
