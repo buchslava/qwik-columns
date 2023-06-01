@@ -1,22 +1,83 @@
-export const w = "#ffffff";
-export const b = "#000000";
+export const COLOR_WHITE = "#ffffff";
+
+const w = COLOR_WHITE;
+
+export const COLOR_RED = "#f34336";
+export const COLOR_GREEN = "#4db14f";
+export const COLOR_LIME = "#b3ff5a";
+export const COLOR_YELLOW = "#feed3d";
+export const COLOR_BROWN = "#795547";
+export const COLOR_BLUE = "#3e50b4";
+export const COLOR_LIGHT_BLUE = "#2196f3";
+export const COLOR_TEAL = "#008080";
+export const COLOR_FUCHSIA = "#ff00ff";
+
+export const COLOR_INACTIVE_RED = "#f1867e";
+export const COLOR_INACTIVE_GREEN = "#93ad93";
+export const COLOR_INACTIVE_LIME = "#e5ffc7";
+export const COLOR_INACTIVE_YELLOW = "#fff9be";
+export const COLOR_INACTIVE_BROWN = "#dab7aa";
+export const COLOR_INACTIVE_BLUE = "#868eba";
+export const COLOR_INACTIVE_LIGHT_BLUE = "#96c7ee";
+export const COLOR_INACTIVE_TEAL = "#8c9696";
+export const COLOR_INACTIVE_FUCHSIA = "#ffb4ff";
 
 export const customColors = [
-  "#f34336", // Red
-  "#4db14f", // Green
-  "#b3ff5a", // Lime
-  "#feed3d", // Yellow
-  "#795547", // Brown
-  "#3e50b4", // Blue
-  "#2196f3", // Light Blue
-  "#008080", // Teal
-  "#FF00FF", // Fuchsia
+  COLOR_RED,
+  COLOR_GREEN,
+  COLOR_LIME,
+  COLOR_YELLOW,
+  COLOR_BROWN,
+  COLOR_BLUE,
+  COLOR_LIGHT_BLUE,
+  COLOR_TEAL,
+  COLOR_FUCHSIA,
 ];
 
-export const randomColor = () =>
-  customColors[Math.floor(Math.random() * customColors.length)];
+export type ColumnsColor =
+  | typeof COLOR_WHITE
+  | typeof COLOR_RED
+  | typeof COLOR_GREEN
+  | typeof COLOR_LIME
+  | typeof COLOR_YELLOW
+  | typeof COLOR_BROWN
+  | typeof COLOR_BLUE
+  | typeof COLOR_LIGHT_BLUE
+  | typeof COLOR_TEAL
+  | typeof COLOR_FUCHSIA
+  | typeof COLOR_INACTIVE_RED
+  | typeof COLOR_INACTIVE_GREEN
+  | typeof COLOR_INACTIVE_LIME
+  | typeof COLOR_INACTIVE_YELLOW
+  | typeof COLOR_INACTIVE_BROWN
+  | typeof COLOR_INACTIVE_BLUE
+  | typeof COLOR_INACTIVE_LIGHT_BLUE
+  | typeof COLOR_INACTIVE_TEAL
+  | typeof COLOR_INACTIVE_FUCHSIA;
 
-export const initData = [
+export const colorsToDisappearHash: { [k: string]: ColumnsColor } = {
+  [COLOR_RED]: COLOR_INACTIVE_RED,
+  [COLOR_GREEN]: COLOR_INACTIVE_GREEN,
+  [COLOR_LIME]: COLOR_INACTIVE_LIME,
+  [COLOR_YELLOW]: COLOR_INACTIVE_YELLOW,
+  [COLOR_BROWN]: COLOR_INACTIVE_BROWN,
+  [COLOR_BLUE]: COLOR_INACTIVE_BLUE,
+  [COLOR_LIGHT_BLUE]: COLOR_INACTIVE_LIGHT_BLUE,
+  [COLOR_TEAL]: COLOR_INACTIVE_TEAL,
+  [COLOR_FUCHSIA]: COLOR_INACTIVE_FUCHSIA,
+};
+
+export const colorsToDisappear = Object.values(
+  colorsToDisappearHash
+) as ColumnsColor[];
+export const shouldDisappear = (color: ColumnsColor) => {
+  return colorsToDisappear.includes(color);
+};
+
+export const randomColor = (): ColumnsColor =>
+  customColors[Math.floor(Math.random() * customColors.length)] as ColumnsColor;
+
+export const initData: ColumnsColor[][] = [
   [w, w, w, w, w, w, w],
   [w, w, w, w, w, w, w],
   [w, w, w, w, w, w, w],
@@ -52,21 +113,17 @@ export enum Phase {
 }
 
 export interface Actor {
-  state: string[];
+  state: ColumnsColor[];
   x: number;
   y: number;
 }
 
 export interface Game {
-  board: string[][];
-  actor: {
-    state: string[];
-    x: number;
-    y: number;
-  };
+  board: ColumnsColor[][];
+  actor: Actor;
   phase: Phase;
   savedPhase: Phase;
-  nextActor: string[];
+  nextActor: ColumnsColor[];
   score: number;
 }
 
@@ -79,7 +136,7 @@ export function clone(game: Game): Game {
   };
 }
 
-export function matching(game: Game, customBoard?: string[][]) {
+export function matching(game: Game, customBoard?: ColumnsColor[][]) {
   const board = customBoard ?? game.board;
   const columnsQty = board[0].length;
   const rowsQty = board.length;
@@ -104,7 +161,7 @@ export function matching(game: Game, customBoard?: string[][]) {
       const isMatch = (col: number): boolean =>
         board[row][col] === board[row][col - 1] &&
         board[row][col] !== w &&
-        board[row][col] !== b;
+        !shouldDisappear(board[row][col]);
       for (let col = 1; col < columnsQty; col++) {
         if (isMatch(col)) {
           if (matchStartIndex == -1) {
@@ -132,7 +189,7 @@ export function matching(game: Game, customBoard?: string[][]) {
       const isMatch = (row: number): boolean =>
         board[row][col] === board[row - 1][col] &&
         board[row][col] !== w &&
-        board[row][col] != b;
+        !shouldDisappear(board[row][col]);
       for (let row = 1; row < rowsQty; row++) {
         if (isMatch(row)) {
           if (matchStartIndex == -1) {
@@ -162,8 +219,8 @@ export function matching(game: Game, customBoard?: string[][]) {
   ) {
     return (
       board[row][col] === board[row + rowDirect][col + colDirect] &&
-      board[row][col] != w &&
-      board[row][col] != b
+      board[row][col] !== w &&
+      !shouldDisappear(board[row][col])
     );
   }
 
@@ -299,8 +356,8 @@ export function matching(game: Game, customBoard?: string[][]) {
           board[row][col - 1] == board[row][col] &&
           board[row - 1][col - 1] == board[row][col] &&
           board[row - 1][col] == board[row][col] &&
-          board[row][col] != w &&
-          board[row][col] != b
+          board[row][col] !== w &&
+          !shouldDisappear(board[row][col])
         ) {
           match[row][col] = true;
           match[row][col - 1] = true;
@@ -317,8 +374,8 @@ export function matching(game: Game, customBoard?: string[][]) {
         if (
           board[row][col] == board[row - 1][col - 1] &&
           board[row][col - 1] == board[row - 1][col] &&
-          board[row][col] != w &&
-          board[row][col] != b
+          board[row][col] !== w &&
+          !shouldDisappear(board[row][col])
         ) {
           match[row][col] = true;
           match[row][col - 1] = true;
@@ -335,7 +392,7 @@ export function matching(game: Game, customBoard?: string[][]) {
       for (let col = 0; col < columnsQty; col++) {
         if (match[row][col]) {
           if (mark) {
-            board[row][col] = b;
+            board[row][col] = colorsToDisappearHash[board[row][col]];
             game.score++;
           }
           result = true;
@@ -365,9 +422,9 @@ export function collapse(game: Game) {
   const rowsQty = board.length;
 
   for (let col = 0; col < columnsQty; col++) {
-    const newCol = [];
+    const newCol: ColumnsColor[] = [];
     for (let row = rowsQty - 1; row >= 0; row--) {
-      if (board[row][col] != w && board[row][col] != b) {
+      if (board[row][col] !== w && !shouldDisappear(board[row][col])) {
         newCol.push(board[row][col]);
       }
     }
@@ -407,14 +464,14 @@ export function endActorSession(game: Game) {
   if (actor.y + 1 >= 0) {
     board[actor.y + 1][actor.x] = state[2];
   }
-}  
+}
 
 export function isFinish(game: Game): boolean {
   const { board, actor } = game;
   const { state } = actor;
   const columnsQty = board[0].length;
 
-  const getNextBoard = (): string[][] => {
+  const getNextBoard = (): ColumnsColor[][] => {
     const result = board.map((a) => a.slice());
     if (actor.y - 1 >= 0) {
       result[actor.y - 1][actor.x] = state[0];
@@ -467,8 +524,8 @@ export function isNextActorInit(game: Game): boolean {
   return nextActor[0] !== w;
 }
 
-export function randomColors(n: number): string[] {
-  const res = [];
+export function randomColors(n: number): ColumnsColor[] {
+  const res: ColumnsColor[] = [];
   for (let i = 0; i < n; i++) {
     res.push(randomColor());
   }

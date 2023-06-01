@@ -11,7 +11,7 @@ import {
 } from "@builder.io/qwik";
 import * as d3 from "d3";
 import { setSvgDimension } from "./utils";
-import type { Game } from "./game";
+import { COLOR_WHITE, Game } from "./game";
 import { clone } from "./game";
 import {
   Phase,
@@ -30,7 +30,6 @@ import {
   swapActorColors,
   init,
   pause,
-  w,
 } from "./game";
 import Controls from "./controls";
 
@@ -61,7 +60,7 @@ export function render(
     .attr("y", 0)
     .attr("height", height)
     // @ts-ignore
-    .attr("fill", () => d3.color(w));
+    .attr("fill", () => d3.color(COLOR_WHITE));
 
   const data = [];
   for (let i = 0, x = 0, y = 0; i < game.board.length; i++) {
@@ -119,7 +118,7 @@ export function render(
       svg
         .selectAll(".could-fly")
         .transition()
-        .duration(1000)
+        .duration(700)
         .attr("y", (d: any) => d.y + passThroughSteps * blockSize)
         // don't mix with on('end', ...)
         .end()
@@ -243,14 +242,6 @@ export default component$(() => {
             steps
           );
         });
-
-        // while (isNextMovePossible(game)) {
-        //   actorDown(game);
-        // }
-        // game.phase = Phase.MOVING;
-        // setTimeout(() => {
-        //   game.phase = Phase.MOVING;
-        // }, 500);
         return;
       } else if (game.phase === Phase.MATCH_REQUEST) {
         const matched = matching(game)(true);
