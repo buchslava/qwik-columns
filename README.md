@@ -63,3 +63,21 @@ The production build will generate client and server modules by running both cli
 ```shell
 npm run build # or `yarn build`
 ```
+
+## Static Site Generator (Node.js)
+
+```
+npm run build.server
+```
+
+## Static Site Generator (Node.js)
+
+```
+npm run build.server
+```
+
+## Static Site Generator (Node.js)
+
+```
+npm run build.server
+```
