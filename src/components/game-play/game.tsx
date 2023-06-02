@@ -33,6 +33,7 @@ import {
   pause,
 } from "./game-logic";
 import Controls from "./controls";
+import Footer from "./footer";
 
 export function render(
   game: Game,
@@ -289,7 +290,6 @@ export default component$(() => {
           GAME OVER
         </div>
       )}
-
       <div>
         <svg
           class="game-area"
@@ -314,6 +314,7 @@ export default component$(() => {
           store.gameOverPopup = true;
         }}
       />
+      <Footer />
     </div>
   );
 });

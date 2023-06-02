@@ -57,16 +57,18 @@ export default component$<ControlsProps>(
 
     return (
       <div class="relative text-white w-72 h-48">
-        <div class="pl-3 pt-10 inset-x-0 top-0">
-          <div class="mb-5 text-2xl font-extrabold font-mono">
+        <div class="pl-3 inset-x-0 top-0">
+          <div class="mb-5 text-base lg:text-2xl md:text-xl font-extrabold font-mono">
             SCORE: {game.score}
           </div>
           <div class="mb-5">
-            <svg
-              width={blockSize}
-              height={blockSize * game.nextActor.length}
-              ref={svgRef}
-            />
+            <div class="bg-white w-32 pt-2 pb-2 flex justify-center">
+              <svg
+                width={blockSize}
+                height={blockSize * game.nextActor.length}
+                ref={svgRef}
+              />
+            </div>
           </div>
           {game.phase === Phase.INACTIVE && (
             <div class="mb-5">
@@ -103,8 +105,10 @@ export default component$<ControlsProps>(
             </div>
           )}
         </div>
-        <div class="mb-5 pl-3 font-mono text-xl font-bold">CONTROLS</div>
-        <div class="mb-5 pl-3 font-mono text-lg">
+        <div class="mb-5 pl-3 font-mono text-base lg:text-2xl md:text-xl font-bold">
+          CONTROLS
+        </div>
+        <div class="mb-5 pl-3 font-mono text-base lg:text-lg md:text-sm">
           [A] - left
           <br />
           [D] - right
