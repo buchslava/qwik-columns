@@ -1,0 +1,725 @@
+{
+  "symbols": {
+    "s_02wMImzEAbk": {
+      "origin": "../node_modules/@builder.io/qwik-city/index.qwik.mjs",
+      "displayName": "QwikCityProvider_component_useTask",
+      "canonicalFilename": "s_02wmimzeabk",
+      "hash": "02wMImzEAbk",
+      "ctxKind": "function",
+      "ctxName": "useTask$",
+      "captures": true,
+      "parent": "s_TxCFOy819ag"
+    },
+    "s_5J1GdPz7JcQ": {
+      "origin": "components/game-play/game.tsx",
+      "displayName": "game_component_useTask_1",
+      "canonicalFilename": "s_5j1gdpz7jcq",
+      "hash": "5J1GdPz7JcQ",
+      "ctxKind": "function",
+      "ctxName": "useTask$",
+      "captures": true,
+      "parent": "s_0eJNMN0ChX4"
+    },
+    "s_IHgav91uwds": {
+      "origin": "components/game-play/game.tsx",
+      "displayName": "game_component_useTask",
+      "canonicalFilename": "s_ihgav91uwds",
+      "hash": "IHgav91uwds",
+      "ctxKind": "function",
+      "ctxName": "useTask$",
+      "captures": true,
+      "parent": "s_0eJNMN0ChX4"
+    },
+    "s_LzrfCwaFyLk": {
+      "origin": "components/game-play/game.tsx",
+      "displayName": "game_component_useVisibleTask",
+      "canonicalFilename": "s_lzrfcwafylk",
+      "hash": "LzrfCwaFyLk",
+      "ctxKind": "function",
+      "ctxName": "useVisibleTask$",
+      "captures": true,
+      "parent": "s_0eJNMN0ChX4"
+    },
+    "s_0eJNMN0ChX4": {
+      "origin": "components/game-play/game.tsx",
+      "displayName": "game_component",
+      "canonicalFilename": "s_0ejnmn0chx4",
+      "hash": "0eJNMN0ChX4",
+      "ctxKind": "function",
+      "ctxName": "component$",
+      "captures": false,
+      "parent": null
+    },
+    "s_3sccYCDd1Z0": {
+      "origin": "root.tsx",
+      "displayName": "root_component",
+      "canonicalFilename": "s_3sccycdd1z0",
+      "hash": "3sccYCDd1Z0",
+      "ctxKind": "function",
+      "ctxName": "component$",
+      "captures": false,
+      "parent": null
+    },
+    "s_8gdLBszqbaM": {
+      "origin": "../node_modules/@builder.io/qwik-city/index.qwik.mjs",
+      "displayName": "Link_component",
+      "canonicalFilename": "s_8gdlbszqbam",
+      "hash": "8gdLBszqbaM",
+      "ctxKind": "function",
+      "ctxName": "component$",
+      "captures": false,
+      "parent": null
+    },
+    "s_LDGK5i7E0DA": {
+      "origin": "components/game-play/controls.tsx",
+      "displayName": "controls_component",
+      "canonicalFilename": "s_ldgk5i7e0da",
+      "hash": "LDGK5i7E0DA",
+      "ctxKind": "function",
+      "ctxName": "component$",
+      "captures": false,
+      "parent": null
+    },
+    "s_Nk9PlpjQm9Y": {
+      "origin": "../node_modules/@builder.io/qwik-city/index.qwik.mjs",
+      "displayName": "GetForm_component",
+      "canonicalFilename": "s_nk9plpjqm9y",
+      "hash": "Nk9PlpjQm9Y",
+      "ctxKind": "function",
+      "ctxName": "component$",
+      "captures": false,
+      "parent": null
+    },
+    "s_TxCFOy819ag": {
+      "origin": "../node_modules/@builder.io/qwik-city/index.qwik.mjs",
+      "displayName": "QwikCityProvider_component",
+      "canonicalFilename": "s_txcfoy819ag",
+      "hash": "TxCFOy819ag",
+      "ctxKind": "function",
+      "ctxName": "component$",
+      "captures": false,
+      "parent": null
+    },
+    "s_WmYC5H00wtI": {
+      "origin": "../node_modules/@builder.io/qwik-city/index.qwik.mjs",
+      "displayName": "QwikCityMockProvider_component",
+      "canonicalFilename": "s_wmyc5h00wti",
+      "hash": "WmYC5H00wtI",
+      "ctxKind": "function",
+      "ctxName": "component$",
+      "captures": false,
+      "parent": null
+    },
+    "s_e0ssiDXoeAM": {
+      "origin": "../node_modules/@builder.io/qwik-city/index.qwik.mjs",
+      "displayName": "RouterOutlet_component",
+      "canonicalFilename": "s_e0ssidxoeam",
+      "hash": "e0ssiDXoeAM",
+      "ctxKind": "function",
+      "ctxName": "component$",
+      "captures": false,
+      "parent": null
+    },
+    "s_xYL1qOwPyDI": {
+      "origin": "routes/index.tsx",
+      "displayName": "routes_component",
+      "canonicalFilename": "s_xyl1qowpydi",
+      "hash": "xYL1qOwPyDI",
+      "ctxKind": "function",
+      "ctxName": "component$",
+      "captures": false,
+      "parent": null
+    },
+    "s_zrbrqoaqXSY": {
+      "origin": "components/router-head/router-head.tsx",
+      "displayName": "RouterHead_component",
+      "canonicalFilename": "s_zrbrqoaqxsy",
+      "hash": "zrbrqoaqXSY",
+      "ctxKind": "function",
+      "ctxName": "component$",
+      "captures": false,
+      "parent": null
+    },
+    "s_ROUfROoFvZc": {
+      "origin": "components/game-play/game.tsx",
+      "displayName": "game_component_div_Controls_onPause",
+      "canonicalFilename": "s_roufroofvzc",
+      "hash": "ROUfROoFvZc",
+      "ctxKind": "jSXProp",
+      "ctxName": "onPause$",
+      "captures": true,
+      "parent": "s_0eJNMN0ChX4"
+    },
+    "s_RPDJAz33WLA": {
+      "origin": "../node_modules/@builder.io/qwik-city/index.qwik.mjs",
+      "displayName": "QwikCityProvider_component_useStyles",
+      "canonicalFilename": "s_rpdjaz33wla",
+      "hash": "RPDJAz33WLA",
+      "ctxKind": "function",
+      "ctxName": "useStyles$",
+      "captures": false,
+      "parent": "s_TxCFOy819ag"
+    },
+    "s_hO3b5j0m2ZI": {
+      "origin": "root.tsx",
+      "displayName": "root_component_useStyles",
+      "canonicalFilename": "s_ho3b5j0m2zi",
+      "hash": "hO3b5j0m2ZI",
+      "ctxKind": "function",
+      "ctxName": "useStyles$",
+      "captures": false,
+      "parent": "s_3sccYCDd1Z0"
+    },
+    "s_A5bZC7WO00A": {
+      "origin": "../node_modules/@builder.io/qwik-city/index.qwik.mjs",
+      "displayName": "routeActionQrl_action_submit",
+      "canonicalFilename": "s_a5bzc7wo00a",
+      "hash": "A5bZC7WO00A",
+      "ctxKind": "function",
+      "ctxName": "submit",
+      "captures": true,
+      "parent": null
+    },
+    "s_wOIPfiQ04l4": {
+      "origin": "../node_modules/@builder.io/qwik-city/index.qwik.mjs",
+      "displayName": "serverQrl_stuff",
+      "canonicalFilename": "s_woipfiq04l4",
+      "hash": "wOIPfiQ04l4",
+      "ctxKind": "function",
+      "ctxName": "stuff",
+      "captures": true,
+      "parent": null
+    },
+    "s_BUbtvTyvVRE": {
+      "origin": "../node_modules/@builder.io/qwik-city/index.qwik.mjs",
+      "displayName": "QwikCityMockProvider_component_goto",
+      "canonicalFilename": "s_bubtvtyvvre",
+      "hash": "BUbtvTyvVRE",
+      "ctxKind": "function",
+      "ctxName": "goto",
+      "captures": false,
+      "parent": "s_WmYC5H00wtI"
+    },
+    "s_G0CYh0nsyHk": {
+      "origin": "components/game-play/game.tsx",
+      "displayName": "game_component_useOnDocument",
+      "canonicalFilename": "s_g0cyh0nsyhk",
+      "hash": "G0CYh0nsyHk",
+      "ctxKind": "function",
+      "ctxName": "$",
+      "captures": true,
+      "parent": "s_0eJNMN0ChX4"
+    },
+    "s_GNeO5nO3be8": {
+      "origin": "components/game-play/game.tsx",
+      "displayName": "game_component_useOnWindow",
+      "canonicalFilename": "s_gneo5no3be8",
+      "hash": "GNeO5nO3be8",
+      "ctxKind": "function",
+      "ctxName": "$",
+      "captures": true,
+      "parent": "s_0eJNMN0ChX4"
+    },
+    "s_eBQ0vFsFKsk": {
+      "origin": "../node_modules/@builder.io/qwik-city/index.qwik.mjs",
+      "displayName": "Link_component_onPrefetch_event",
+      "canonicalFilename": "s_ebq0vfsfksk",
+      "hash": "eBQ0vFsFKsk",
+      "ctxKind": "function",
+      "ctxName": "event$",
+      "captures": false,
+      "parent": "s_8gdLBszqbaM"
+    },
+    "s_fX0bDjeJa0E": {
+      "origin": "../node_modules/@builder.io/qwik-city/index.qwik.mjs",
+      "displayName": "QwikCityProvider_component_goto",
+      "canonicalFilename": "s_fx0bdjeja0e",
+      "hash": "fX0bDjeJa0E",
+      "ctxKind": "function",
+      "ctxName": "goto",
+      "captures": true,
+      "parent": "s_TxCFOy819ag"
+    },
+    "s_i1Cv0pYJNR0": {
+      "origin": "../node_modules/@builder.io/qwik-city/index.qwik.mjs",
+      "displayName": "Link_component_handleClick_event",
+      "canonicalFilename": "s_i1cv0pyjnr0",
+      "hash": "i1Cv0pYJNR0",
+      "ctxKind": "function",
+      "ctxName": "event$",
+      "captures": true,
+      "parent": "s_8gdLBszqbaM"
+    },
+    "s_kYFzhOQnm80": {
+      "origin": "components/game-play/game.tsx",
+      "displayName": "game_component_div_Controls_onStop",
+      "canonicalFilename": "s_kyfzhoqnm80",
+      "hash": "kYFzhOQnm80",
+      "ctxKind": "jSXProp",
+      "ctxName": "onStop$",
+      "captures": true,
+      "parent": "s_0eJNMN0ChX4"
+    },
+    "s_p9MSze0ojs4": {
+      "origin": "../node_modules/@builder.io/qwik-city/index.qwik.mjs",
+      "displayName": "GetForm_component_form_onSubmit",
+      "canonicalFilename": "s_p9msze0ojs4",
+      "hash": "p9MSze0ojs4",
+      "ctxKind": "function",
+      "ctxName": "_jsxS",
+      "captures": true,
+      "parent": "s_Nk9PlpjQm9Y"
+    },
+    "s_xJrxY7wiGYs": {
+      "origin": "components/game-play/game.tsx",
+      "displayName": "game_component_div_Controls_onStart",
+      "canonicalFilename": "s_xjrxy7wigys",
+      "hash": "xJrxY7wiGYs",
+      "ctxKind": "jSXProp",
+      "ctxName": "onStart$",
+      "captures": true,
+      "parent": "s_0eJNMN0ChX4"
+    }
+  },
+  "mapping": {
+    "s_02wMImzEAbk": "q-b6d9e237.js",
+    "s_5J1GdPz7JcQ": "q-dd77bd9c.js",
+    "s_IHgav91uwds": "q-dd77bd9c.js",
+    "s_LzrfCwaFyLk": "q-dd77bd9c.js",
+    "s_0eJNMN0ChX4": "q-dd77bd9c.js",
+    "s_3sccYCDd1Z0": "q-e5f274b7.js",
+    "s_8gdLBszqbaM": "q-ab9c60bc.js",
+    "s_LDGK5i7E0DA": "q-be7b380c.js",
+    "s_Nk9PlpjQm9Y": "q-39a91892.js",
+    "s_TxCFOy819ag": "q-b6d9e237.js",
+    "s_WmYC5H00wtI": "q-9a0769f9.js",
+    "s_e0ssiDXoeAM": "q-ec5a0e8d.js",
+    "s_xYL1qOwPyDI": "q-237af250.js",
+    "s_zrbrqoaqXSY": "q-3d2c7564.js",
+    "s_ROUfROoFvZc": "q-dd77bd9c.js",
+    "s_RPDJAz33WLA": "q-b6d9e237.js",
+    "s_hO3b5j0m2ZI": "q-e5f274b7.js",
+    "s_A5bZC7WO00A": "q-724346fe.js",
+    "s_wOIPfiQ04l4": "q-dbe6ce8a.js",
+    "s_BUbtvTyvVRE": "q-9a0769f9.js",
+    "s_G0CYh0nsyHk": "q-dd77bd9c.js",
+    "s_GNeO5nO3be8": "q-dd77bd9c.js",
+    "s_eBQ0vFsFKsk": "q-1a1672dd.js",
+    "s_fX0bDjeJa0E": "q-b6d9e237.js",
+    "s_i1Cv0pYJNR0": "q-ab9c60bc.js",
+    "s_kYFzhOQnm80": "q-dd77bd9c.js",
+    "s_p9MSze0ojs4": "q-39a91892.js",
+    "s_xJrxY7wiGYs": "q-dd77bd9c.js"
+  },
+  "bundles": {
+    "q-0369ec65.js": {
+      "size": 6149,
+      "imports": [
+        "q-8345e2da.js"
+      ],
+      "dynamicImports": [
+        "q-b6d9e237.js",
+        "q-ec5a0e8d.js"
+      ],
+      "origins": [
+        "@qwik-city-sw-register",
+        "node_modules/@builder.io/qwik-city/index.qwik.mjs"
+      ]
+    },
+    "q-1a1672dd.js": {
+      "size": 128,
+      "imports": [
+        "q-0369ec65.js",
+        "q-8345e2da.js"
+      ],
+      "origins": [
+        "src/s_ebq0vfsfksk.js"
+      ],
+      "symbols": [
+        "s_eBQ0vFsFKsk"
+      ]
+    },
+    "q-237af250.js": {
+      "size": 155,
+      "imports": [
+        "q-8345e2da.js",
+        "q-94000052.js",
+        "q-a0305f31.js"
+      ],
+      "origins": [
+        "src/entry_routes.js",
+        "src/s_xyl1qowpydi.js"
+      ],
+      "symbols": [
+        "s_xYL1qOwPyDI"
+      ]
+    },
+    "q-29c72b41.js": {
+      "size": 202,
+      "imports": [
+        "q-8345e2da.js"
+      ],
+      "dynamicImports": [
+        "q-e5f274b7.js"
+      ],
+      "origins": [
+        "src/root.tsx"
+      ]
+    },
+    "q-39a91892.js": {
+      "size": 1006,
+      "imports": [
+        "q-0369ec65.js",
+        "q-8345e2da.js"
+      ],
+      "origins": [
+        "src/entry_GetForm.js",
+        "src/s_nk9plpjqm9y.js",
+        "src/s_p9msze0ojs4.js"
+      ],
+      "symbols": [
+        "s_Nk9PlpjQm9Y",
+        "s_p9MSze0ojs4"
+      ]
+    },
+    "q-3d2c7564.js": {
+      "size": 583,
+      "imports": [
+        "q-0369ec65.js",
+        "q-8345e2da.js"
+      ],
+      "origins": [
+        "src/entry_RouterHead.js",
+        "src/s_zrbrqoaqxsy.js"
+      ],
+      "symbols": [
+        "s_zrbrqoaqXSY"
+      ]
+    },
+    "q-724346fe.js": {
+      "size": 751,
+      "imports": [
+        "q-8345e2da.js"
+      ],
+      "origins": [
+        "src/entry_routeActionQrl.js",
+        "src/s_a5bzc7wo00a.js"
+      ],
+      "symbols": [
+        "s_A5bZC7WO00A"
+      ]
+    },
+    "q-8345e2da.js": {
+      "size": 45286,
+      "origins": [
+        "node_modules/@builder.io/qwik/core.min.mjs"
+      ]
+    },
+    "q-94000052.js": {
+      "size": 42581,
+      "origins": [
+        "node_modules/d3-color/src/color.js",
+        "node_modules/d3-color/src/define.js",
+        "node_modules/d3-dispatch/src/dispatch.js",
+        "node_modules/d3-ease/src/cubic.js",
+        "node_modules/d3-interpolate/src/color.js",
+        "node_modules/d3-interpolate/src/constant.js",
+        "node_modules/d3-interpolate/src/number.js",
+        "node_modules/d3-interpolate/src/rgb.js",
+        "node_modules/d3-interpolate/src/string.js",
+        "node_modules/d3-interpolate/src/transform/decompose.js",
+        "node_modules/d3-interpolate/src/transform/index.js",
+        "node_modules/d3-interpolate/src/transform/parse.js",
+        "node_modules/d3-selection/src/array.js",
+        "node_modules/d3-selection/src/constant.js",
+        "node_modules/d3-selection/src/creator.js",
+        "node_modules/d3-selection/src/matcher.js",
+        "node_modules/d3-selection/src/namespace.js",
+        "node_modules/d3-selection/src/namespaces.js",
+        "node_modules/d3-selection/src/select.js",
+        "node_modules/d3-selection/src/selection/append.js",
+        "node_modules/d3-selection/src/selection/attr.js",
+        "node_modules/d3-selection/src/selection/call.js",
+        "node_modules/d3-selection/src/selection/classed.js",
+        "node_modules/d3-selection/src/selection/clone.js",
+        "node_modules/d3-selection/src/selection/data.js",
+        "node_modules/d3-selection/src/selection/datum.js",
+        "node_modules/d3-selection/src/selection/dispatch.js",
+        "node_modules/d3-selection/src/selection/each.js",
+        "node_modules/d3-selection/src/selection/empty.js",
+        "node_modules/d3-selection/src/selection/enter.js",
+        "node_modules/d3-selection/src/selection/exit.js",
+        "node_modules/d3-selection/src/selection/filter.js",
+        "node_modules/d3-selection/src/selection/html.js",
+        "node_modules/d3-selection/src/selection/index.js",
+        "node_modules/d3-selection/src/selection/insert.js",
+        "node_modules/d3-selection/src/selection/iterator.js",
+        "node_modules/d3-selection/src/selection/join.js",
+        "node_modules/d3-selection/src/selection/lower.js",
+        "node_modules/d3-selection/src/selection/merge.js",
+        "node_modules/d3-selection/src/selection/node.js",
+        "node_modules/d3-selection/src/selection/nodes.js",
+        "node_modules/d3-selection/src/selection/on.js",
+        "node_modules/d3-selection/src/selection/order.js",
+        "node_modules/d3-selection/src/selection/property.js",
+        "node_modules/d3-selection/src/selection/raise.js",
+        "node_modules/d3-selection/src/selection/remove.js",
+        "node_modules/d3-selection/src/selection/select.js",
+        "node_modules/d3-selection/src/selection/selectAll.js",
+        "node_modules/d3-selection/src/selection/selectChild.js",
+        "node_modules/d3-selection/src/selection/selectChildren.js",
+        "node_modules/d3-selection/src/selection/size.js",
+        "node_modules/d3-selection/src/selection/sort.js",
+        "node_modules/d3-selection/src/selection/sparse.js",
+        "node_modules/d3-selection/src/selection/style.js",
+        "node_modules/d3-selection/src/selection/text.js",
+        "node_modules/d3-selection/src/selector.js",
+        "node_modules/d3-selection/src/selectorAll.js",
+        "node_modules/d3-selection/src/window.js",
+        "node_modules/d3-timer/src/timeout.js",
+        "node_modules/d3-timer/src/timer.js",
+        "node_modules/d3-transition/src/interrupt.js",
+        "node_modules/d3-transition/src/selection/index.js",
+        "node_modules/d3-transition/src/selection/interrupt.js",
+        "node_modules/d3-transition/src/selection/transition.js",
+        "node_modules/d3-transition/src/transition/attr.js",
+        "node_modules/d3-transition/src/transition/attrTween.js",
+        "node_modules/d3-transition/src/transition/delay.js",
+        "node_modules/d3-transition/src/transition/duration.js",
+        "node_modules/d3-transition/src/transition/ease.js",
+        "node_modules/d3-transition/src/transition/easeVarying.js",
+        "node_modules/d3-transition/src/transition/end.js",
+        "node_modules/d3-transition/src/transition/filter.js",
+        "node_modules/d3-transition/src/transition/index.js",
+        "node_modules/d3-transition/src/transition/interpolate.js",
+        "node_modules/d3-transition/src/transition/merge.js",
+        "node_modules/d3-transition/src/transition/on.js",
+        "node_modules/d3-transition/src/transition/remove.js",
+        "node_modules/d3-transition/src/transition/schedule.js",
+        "node_modules/d3-transition/src/transition/select.js",
+        "node_modules/d3-transition/src/transition/selectAll.js",
+        "node_modules/d3-transition/src/transition/selection.js",
+        "node_modules/d3-transition/src/transition/style.js",
+        "node_modules/d3-transition/src/transition/styleTween.js",
+        "node_modules/d3-transition/src/transition/text.js",
+        "node_modules/d3-transition/src/transition/textTween.js",
+        "node_modules/d3-transition/src/transition/transition.js",
+        "node_modules/d3-transition/src/transition/tween.js",
+        "node_modules/d3-zoom/src/transform.js",
+        "src/components/game-play/game-logic.ts"
+      ]
+    },
+    "q-9a0769f9.js": {
+      "size": 719,
+      "imports": [
+        "q-0369ec65.js",
+        "q-8345e2da.js"
+      ],
+      "origins": [
+        "src/entry_QwikCityMockProvider.js",
+        "src/s_bubtvtyvvre.js",
+        "src/s_wmyc5h00wti.js"
+      ],
+      "symbols": [
+        "s_BUbtvTyvVRE",
+        "s_WmYC5H00wtI"
+      ]
+    },
+    "q-a0305f31.js": {
+      "size": 1346,
+      "imports": [
+        "q-8345e2da.js",
+        "q-94000052.js"
+      ],
+      "dynamicImports": [
+        "q-dd77bd9c.js"
+      ],
+      "origins": [
+        "src/components/game-play/game.tsx"
+      ]
+    },
+    "q-ab9c60bc.js": {
+      "size": 958,
+      "imports": [
+        "q-0369ec65.js",
+        "q-8345e2da.js"
+      ],
+      "dynamicImports": [
+        "q-1a1672dd.js"
+      ],
+      "origins": [
+        "src/entry_Link.js",
+        "src/s_8gdlbszqbam.js",
+        "src/s_i1cv0pyjnr0.js"
+      ],
+      "symbols": [
+        "s_8gdLBszqbaM",
+        "s_i1Cv0pYJNR0"
+      ]
+    },
+    "q-b6d9e237.js": {
+      "size": 2612,
+      "imports": [
+        "q-0369ec65.js",
+        "q-8345e2da.js"
+      ],
+      "dynamicImports": [
+        "q-bfa26856.js"
+      ],
+      "origins": [
+        "@qwik-city-plan",
+        "src/entry_QwikCityProvider.js",
+        "src/s_02wmimzeabk.js",
+        "src/s_fx0bdjeja0e.js",
+        "src/s_rpdjaz33wla.js",
+        "src/s_txcfoy819ag.js"
+      ],
+      "symbols": [
+        "s_02wMImzEAbk",
+        "s_fX0bDjeJa0E",
+        "s_RPDJAz33WLA",
+        "s_TxCFOy819ag"
+      ]
+    },
+    "q-be7b380c.js": {
+      "size": 1595,
+      "imports": [
+        "q-8345e2da.js",
+        "q-94000052.js",
+        "q-cf8038ea.js"
+      ],
+      "origins": [
+        "src/entry_controls.js",
+        "src/s_ldgk5i7e0da.js"
+      ],
+      "symbols": [
+        "s_LDGK5i7E0DA"
+      ]
+    },
+    "q-bfa26856.js": {
+      "size": 229,
+      "imports": [
+        "q-8345e2da.js"
+      ],
+      "dynamicImports": [
+        "q-237af250.js"
+      ],
+      "origins": [
+        "src/routes/index.tsx"
+      ]
+    },
+    "q-cf8038ea.js": {
+      "size": 613,
+      "imports": [
+        "q-8345e2da.js",
+        "q-94000052.js"
+      ],
+      "dynamicImports": [
+        "q-be7b380c.js"
+      ],
+      "origins": [
+        "src/components/game-play/controls.tsx"
+      ]
+    },
+    "q-dbe6ce8a.js": {
+      "size": 875,
+      "imports": [
+        "q-0369ec65.js",
+        "q-8345e2da.js"
+      ],
+      "origins": [
+        "src/entry_serverQrl.js",
+        "src/s_woipfiq04l4.js"
+      ],
+      "symbols": [
+        "s_wOIPfiQ04l4"
+      ]
+    },
+    "q-dd77bd9c.js": {
+      "size": 3796,
+      "imports": [
+        "q-8345e2da.js",
+        "q-94000052.js",
+        "q-a0305f31.js",
+        "q-cf8038ea.js"
+      ],
+      "origins": [
+        "src/components/game-play/utils.ts",
+        "src/entry_game.js",
+        "src/s_0ejnmn0chx4.js",
+        "src/s_5j1gdpz7jcq.js",
+        "src/s_g0cyh0nsyhk.js",
+        "src/s_gneo5no3be8.js",
+        "src/s_ihgav91uwds.js",
+        "src/s_kyfzhoqnm80.js",
+        "src/s_lzrfcwafylk.js",
+        "src/s_roufroofvzc.js",
+        "src/s_xjrxy7wigys.js"
+      ],
+      "symbols": [
+        "s_0eJNMN0ChX4",
+        "s_5J1GdPz7JcQ",
+        "s_G0CYh0nsyHk",
+        "s_GNeO5nO3be8",
+        "s_IHgav91uwds",
+        "s_kYFzhOQnm80",
+        "s_LzrfCwaFyLk",
+        "s_ROUfROoFvZc",
+        "s_xJrxY7wiGYs"
+      ]
+    },
+    "q-e5f274b7.js": {
+      "size": 9114,
+      "imports": [
+        "q-0369ec65.js",
+        "q-8345e2da.js"
+      ],
+      "dynamicImports": [
+        "q-3d2c7564.js"
+      ],
+      "origins": [
+        "src/components/router-head/router-head.tsx",
+        "src/entry_root.js",
+        "src/global.css?used&inline",
+        "src/s_3sccycdd1z0.js",
+        "src/s_ho3b5j0m2zi.js"
+      ],
+      "symbols": [
+        "s_3sccYCDd1Z0",
+        "s_hO3b5j0m2ZI"
+      ]
+    },
+    "q-ec5a0e8d.js": {
+      "size": 412,
+      "imports": [
+        "q-0369ec65.js",
+        "q-8345e2da.js"
+      ],
+      "origins": [
+        "src/entry_RouterOutlet.js",
+        "src/s_e0ssidxoeam.js"
+      ],
+      "symbols": [
+        "s_e0ssiDXoeAM"
+      ]
+    }
+  },
+  "injections": [],
+  "version": "1",
+  "options": {
+    "target": "client",
+    "buildMode": "production",
+    "forceFullBuild": true,
+    "entryStrategy": {
+      "type": "smart"
+    }
+  },
+  "platform": {
+    "qwik": "1.1.4",
+    "vite": "",
+    "rollup": "3.22.0",
+    "env": "node",
+    "os": "darwin",
+    "node": "16.16.0"
+  }
+}
