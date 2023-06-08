@@ -10,6 +10,10 @@ interface ControlsProps {
   onStart$: PropFunction<() => void>;
   onPause$: PropFunction<() => void>;
   onStop$: PropFunction<() => void>;
+  onLeft$: PropFunction<() => void>;
+  onRight$: PropFunction<() => void>;
+  onSwap$: PropFunction<() => void>;
+  onDrop$: PropFunction<() => void>;
   blockSize: number;
 }
 
@@ -46,11 +50,23 @@ export function renderNextActor(
     .attr("y", (d) => d.y)
     .attr("height", (d) => d.size)
     // @ts-ignore
-    .attr("fill", (d) => d3.color(d.value));
+    .attr("fill", (d) => d3.color(d.value))
+    .attr("stroke", "#000000")
+    .attr("stroke-width", 1);
 }
 
 export default component$<ControlsProps>(
-  ({ onStart$, onPause$, onStop$, game, blockSize }) => {
+  ({
+    onStart$,
+    onPause$,
+    onStop$,
+    onLeft$,
+    onRight$,
+    onSwap$,
+    onDrop$,
+    game,
+    blockSize,
+  }) => {
     const svgRef = useSignal<Element>();
 
     renderNextActor(game.nextActor, blockSize, svgRef);
@@ -105,19 +121,44 @@ export default component$<ControlsProps>(
             </div>
           )}
         </div>
-        <div class="mb-5 pl-3 font-mono text-base lg:text-2xl md:text-xl font-bold">
-          CONTROLS
-        </div>
-        <div class="mb-5 pl-3 font-mono text-base lg:text-lg md:text-sm">
-          [A] - left
-          <br />
-          [D] - right
-          <br />
-          [W] - swap colors
-          <br />
-          [D] or
-          <br /> [Space] - drop
-        </div>
+        {game.phase !== Phase.INACTIVE && (
+          <div class="pl-3 grid grid-rows-3 grid-cols-2 gap-4">
+            <div class="col-span-2">
+              <button
+                onClick$={onSwap$}
+                type="button"
+                class="text-2xl py-3 w-32 text-white bg-gray-400 rounded focus:outline-none"
+              >
+                ⬆ <sup>W</sup>
+              </button>
+            </div>
+            <div class="flex w-full justify-between">
+              <button
+                onClick$={onLeft$}
+                type="button"
+                class="text-2xl py-3 w-14 text-white bg-green-300 rounded focus:outline-none"
+              >
+                ⬅ <sup>A</sup>
+              </button>
+              <button
+                onClick$={onRight$}
+                type="button"
+                class="text-2xl py-3 w-14 text-white bg-green-300 rounded focus:outline-none"
+              >
+                <sup>D</sup> ⮕
+              </button>
+            </div>
+            <div class="col-span-2">
+              <button
+                onClick$={onDrop$}
+                type="button"
+                class="text-2xl py-3 w-32 text-white bg-gray-400 rounded focus:outline-none"
+              >
+                ⬇ <sup>S</sup>
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     );
   }

@@ -76,7 +76,7 @@ export function render(
 
   svg
     .selectAll()
-    .data(data)
+    .data(data.filter((d) => d.value !== COLOR_WHITE))
     .enter()
     .append("g")
     .append("rect")
@@ -85,7 +85,9 @@ export function render(
     .attr("y", (d) => d.y)
     .attr("height", blockSize)
     // @ts-ignore
-    .attr("fill", (d) => d3.color(d.value));
+    .attr("fill", (d) => d3.color(d.value))
+    .attr("stroke", "#000000")
+    .attr("stroke-width", 1);
 
   if (
     game.phase === Phase.MOVING ||
@@ -113,7 +115,9 @@ export function render(
       .attr("y", (d) => d.y)
       .attr("height", blockSize)
       // @ts-ignore
-      .attr("fill", (d) => d3.color(d.value));
+      .attr("fill", (d) => d3.color(d.value))
+      .attr("stroke", "#000000")
+      .attr("stroke-width", 1);
 
     if (passThroughSteps) {
       game.phase = Phase.FLYING;
@@ -163,6 +167,42 @@ export default component$(() => {
   const containerRef = useSignal<Element>();
   const svgRef = useSignal<Element>();
 
+  const reRender = $((steps?: number) => {
+    window.requestAnimationFrame(() => {
+      render(
+        store.game,
+        svgRef,
+        store.width,
+        store.height,
+        store.blockSize,
+        steps
+      );
+    });
+  });
+  const doLeft = $(() => {
+    if (store.game.phase === Phase.MOVING) {
+      moveLeft(store.game);
+      reRender();
+    }
+  });
+  const doRight = $(() => {
+    if (store.game.phase === Phase.MOVING) {
+      moveRight(store.game);
+      reRender();
+    }
+  });
+  const doSwap = $(() => {
+    if (store.game.phase === Phase.MOVING) {
+      swapActorColors(store.game);
+      reRender();
+    }
+  });
+  const doDrop = $(() => {
+    if (store.game.phase === Phase.MOVING) {
+      store.game.phase = Phase.DROP;
+    }
+  });
+
   useOnWindow(
     "resize",
     $(() => {
@@ -178,29 +218,14 @@ export default component$(() => {
       if (phase !== Phase.MOVING) {
         return;
       }
-      let shouldRender = false;
       if (keyEvent.code === "KeyA") {
-        moveLeft(store.game);
-        shouldRender = true;
+        doLeft();
       } else if (keyEvent.code === "KeyD") {
-        moveRight(store.game);
-        shouldRender = true;
+        doRight();
       } else if (keyEvent.code === "KeyS" || keyEvent.code === "Space") {
-        store.game.phase = Phase.DROP;
+        doDrop();
       } else if (keyEvent.code === "KeyW") {
-        swapActorColors(store.game);
-        shouldRender = true;
-      }
-      if (shouldRender) {
-        window.requestAnimationFrame(() => {
-          render(
-            store.game,
-            svgRef,
-            store.width,
-            store.height,
-            store.blockSize
-          );
-        });
+        doSwap();
       }
     })
   );
@@ -234,16 +259,7 @@ export default component$(() => {
           actorDown(gameClone);
           steps++;
         }
-        window.requestAnimationFrame(() => {
-          render(
-            game,
-            svgRef,
-            store.width,
-            store.height,
-            store.blockSize,
-            steps
-          );
-        });
+        reRender(steps);
         return;
       } else if (game.phase === Phase.MATCH_REQUEST) {
         const matched = matching(game)(true);
@@ -258,9 +274,7 @@ export default component$(() => {
         game.phase = Phase.MATCH_REQUEST;
       }
 
-      window.requestAnimationFrame(() => {
-        render(game, svgRef, store.width, store.height, store.blockSize);
-      });
+      reRender();
     }, 700);
     cleanup(() => clearInterval(id));
   });
@@ -313,6 +327,10 @@ export default component$(() => {
           store.game.phase = Phase.INACTIVE;
           store.gameOverPopup = true;
         }}
+        onLeft$={doLeft}
+        onRight$={doRight}
+        onSwap$={doSwap}
+        onDrop$={doDrop}
       />
       <Footer />
     </div>
