@@ -4,6 +4,7 @@ import { component$ } from "@builder.io/qwik";
 import * as d3 from "d3";
 import type { Game } from "./game-logic";
 import { Phase } from "./game-logic";
+import { Level } from "./game";
 
 interface ControlsProps {
   game: Game;
@@ -14,7 +15,9 @@ interface ControlsProps {
   onRight$: PropFunction<() => void>;
   onSwap$: PropFunction<() => void>;
   onDrop$: PropFunction<() => void>;
+  onLevel$: PropFunction<(level: Level) => void>;
   blockSize: number;
+  level: Level;
 }
 
 export function renderNextActor(
@@ -64,8 +67,10 @@ export default component$<ControlsProps>(
     onRight$,
     onSwap$,
     onDrop$,
+    onLevel$,
     game,
     blockSize,
+    level,
   }) => {
     const svgRef = useSignal<Element>();
 
@@ -120,6 +125,47 @@ export default component$<ControlsProps>(
               </button>
             </div>
           )}
+        </div>
+        <div class="pl-3 mb-5 flex w-36 justify-between">
+          <button
+            onClick$={() => {
+              onLevel$(Level.SLOW);
+            }}
+            type="button"
+            class={[
+              "w-10 py-3 text-white rounded focus:outline-none",
+              level === Level.SLOW ? "bg-green-700" : "bg-yellow-500",
+            ]}
+            disabled={level === Level.SLOW}
+          >
+            1
+          </button>
+          <button
+            onClick$={() => {
+              onLevel$(Level.NORMAL);
+            }}
+            type="button"
+            class={[
+              "w-10 py-3 text-white rounded focus:outline-none",
+              level === Level.NORMAL ? "bg-green-700" : "bg-yellow-500",
+            ]}
+            disabled={level === Level.NORMAL}
+          >
+            2
+          </button>
+          <button
+            onClick$={() => {
+              onLevel$(Level.FAST);
+            }}
+            type="button"
+            class={[
+              "w-10 py-3 text-white rounded focus:outline-none",
+              level === Level.FAST ? "bg-green-700" : "bg-yellow-500",
+            ]}
+            disabled={level === Level.FAST}
+          >
+            3
+          </button>
         </div>
         {game.phase !== Phase.INACTIVE && (
           <div class="pl-3 grid grid-rows-3 grid-cols-2 gap-4">

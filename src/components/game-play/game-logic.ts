@@ -1,3 +1,5 @@
+import { Level } from "./game";
+
 export const COLOR_WHITE = "#ffffff";
 
 const w = COLOR_WHITE;
@@ -125,6 +127,7 @@ export interface Game {
   savedPhase: Phase;
   nextActor: ColumnsColor[];
   score: number;
+  scores: { [key: string]: number };
 }
 
 export function clone(game: Game): Game {
@@ -136,7 +139,11 @@ export function clone(game: Game): Game {
   };
 }
 
-export function matching(game: Game, customBoard?: ColumnsColor[][]) {
+export function matching(
+  game: Game,
+  level: Level,
+  customBoard?: ColumnsColor[][]
+) {
   const board = customBoard ?? game.board;
   const columnsQty = board[0].length;
   const rowsQty = board.length;
@@ -393,7 +400,7 @@ export function matching(game: Game, customBoard?: ColumnsColor[][]) {
         if (match[row][col]) {
           if (mark) {
             board[row][col] = colorsToDisappearHash[board[row][col]];
-            game.score++;
+            game.score += game.scores[level];
           }
           result = true;
         }
@@ -466,7 +473,7 @@ export function endActorSession(game: Game) {
   }
 }
 
-export function isFinish(game: Game): boolean {
+export function isFinish(game: Game, level: Level): boolean {
   const { board, actor } = game;
   const { state } = actor;
   const columnsQty = board[0].length;
@@ -485,7 +492,7 @@ export function isFinish(game: Game): boolean {
     return result;
   };
 
-  if (matching(game, getNextBoard())(false)) {
+  if (matching(game, level, getNextBoard())(false)) {
     return false;
   }
   for (let col = 0; col < columnsQty; col++) {
