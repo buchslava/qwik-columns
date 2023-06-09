@@ -28,8 +28,11 @@ export function renderNextActor(
   if (!svgRef.value) {
     return;
   }
-  const svg = d3
-    .select(svgRef.value)
+  const svg = d3.select(svgRef.value);
+
+  svg.selectAll("*").remove();
+
+  svg
     .append("svg")
     .attr("width", size)
     .attr("height", size * data.length)
@@ -175,23 +178,23 @@ export default component$<ControlsProps>(
                 type="button"
                 class="text-2xl py-3 w-32 text-white bg-gray-400 rounded focus:outline-none"
               >
-                ⬆ <sup>W</sup>
+                W
               </button>
             </div>
-            <div class="flex w-full justify-between">
+            <div class="w-32 grid grid-flow-col justify-stretch">
               <button
                 onClick$={onLeft$}
                 type="button"
-                class="text-2xl py-3 w-14 text-white bg-green-300 rounded focus:outline-none"
+                class="text-2xl mr-2 py-3 text-white bg-green-300 rounded focus:outline-none"
               >
-                ⬅ <sup>A</sup>
+                A
               </button>
               <button
                 onClick$={onRight$}
                 type="button"
-                class="text-2xl py-3 w-14 text-white bg-green-300 rounded focus:outline-none"
+                class="text-2xl ml-2 py-3 text-white bg-green-300 rounded focus:outline-none"
               >
-                <sup>D</sup> ⮕
+                D
               </button>
             </div>
             <div class="col-span-2">
@@ -200,7 +203,7 @@ export default component$<ControlsProps>(
                 type="button"
                 class="text-2xl py-3 w-32 text-white bg-gray-400 rounded focus:outline-none"
               >
-                ⬇ <sup>S</sup>
+                S
               </button>
             </div>
           </div>
