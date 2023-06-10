@@ -315,14 +315,6 @@ export default component$(() => {
     }
   });
 
-  useTask$(({ track }: { track: Function }) => {
-    track(() => store.width);
-    track(() => store.height);
-    track(() => store.game);
-
-    render(store.game, svgRef, store.width, store.height, store.blockSize);
-  });
-
   return (
     <div class="flex justify-center w-screen h-screen pt-5" ref={containerRef}>
       {store.gameOverPopup && (
