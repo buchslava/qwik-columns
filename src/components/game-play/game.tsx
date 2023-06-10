@@ -64,8 +64,10 @@ export function render(
   if (!svgRef.value) {
     return;
   }
-  const svg = d3
-    .select(svgRef.value)
+
+  const svg = d3.select(svgRef.value);
+  svg.selectAll("*").remove();
+  svg
     .append("svg")
     .attr("width", width)
     .attr("height", height)
