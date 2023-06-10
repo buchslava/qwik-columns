@@ -142,6 +142,7 @@ export function clone(game: Game): Game {
 export function matching(
   game: Game,
   level: Level,
+  mark: boolean,
   customBoard?: ColumnsColor[][]
 ) {
   const board = customBoard ?? game.board;
@@ -409,18 +410,16 @@ export function matching(
     return result;
   }
 
-  return function (mark: boolean) {
-    const match = initMatches();
-    verticalMatching(match);
-    horizontalMatching(match);
-    diagonalColumnRightToLeftMatching(match);
-    diagonalRowRightToLeftMatching(match);
-    diagonalColumnLeftToRightMatching(match);
-    diagonalRowLeftToRightMatching(match);
-    squareMatching(match);
-    crossSquareMatching(match);
-    return checkCollapsed(match, mark);
-  };
+  const match = initMatches();
+  verticalMatching(match);
+  horizontalMatching(match);
+  diagonalColumnRightToLeftMatching(match);
+  diagonalRowRightToLeftMatching(match);
+  diagonalColumnLeftToRightMatching(match);
+  diagonalRowLeftToRightMatching(match);
+  squareMatching(match);
+  crossSquareMatching(match);
+  return checkCollapsed(match, mark);
 }
 
 export function collapse(game: Game) {
@@ -492,7 +491,7 @@ export function isFinish(game: Game, level: Level): boolean {
     return result;
   };
 
-  if (matching(game, level, getNextBoard())(false)) {
+  if (matching(game, level, false, getNextBoard())) {
     return false;
   }
   for (let col = 0; col < columnsQty; col++) {

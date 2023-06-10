@@ -255,7 +255,7 @@ export default component$(() => {
       reRender(steps);
       return;
     } else if (game.phase === Phase.MATCH_REQUEST) {
-      const matched = matching(game, store.level)(true);
+      const matched = matching(game, store.level, true);
       if (matched) {
         game.phase = Phase.COLLAPSE_REQUEST;
       } else {
