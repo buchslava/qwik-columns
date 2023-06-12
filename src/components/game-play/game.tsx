@@ -6,36 +6,17 @@ import {
   useSignal,
   useOnDocument,
   useOnWindow,
-  useTask$,
   $,
 } from "@builder.io/qwik";
 import * as d3 from "d3";
 import { setSvgDimension } from "./utils";
-import type { Game } from "./game-logic";
-import { COLOR_WHITE } from "./game-logic";
-import {
-  Phase,
-  actorDown,
-  collapse,
-  doNextActor,
-  endActorSession,
-  initActor,
-  initData,
-  isFinish,
-  isNextMovePossible,
-  matching,
-  moveLeft,
-  moveRight,
-  randomColors,
-  swapActorColors,
-} from "./game-logic";
 
 export function render(
-  game: Game,
   svgRef: Signal<Element | undefined>,
   width: number,
   height: number,
-  blockSize: number
+  x: number,
+  y: number
 ) {
   if (!svgRef.value) {
     return;
@@ -58,113 +39,40 @@ export function render(
     .attr("y", 0)
     .attr("height", height)
     // @ts-ignore
-    .attr("fill", () => d3.color(COLOR_WHITE));
+    .attr("fill", () => d3.color("#ffffff"));
 
-  const data = [];
-  for (let i = 0, x = 0, y = 0; i < game.board.length; i++) {
-    x = 0;
-    for (let j = 0; j < game.board[i].length; j++) {
-      data.push({ x, y, value: game.board[i][j] });
-      x += blockSize;
-    }
-    y += blockSize;
-  }
+  const data = [{ x, y }];
 
   svg
     .selectAll()
-    .data(data.filter((d) => d.value !== COLOR_WHITE))
+    .data(data)
     .enter()
     .append("g")
     .append("rect")
     .attr("x", (d) => d.x)
-    .attr("width", blockSize)
+    .attr("width", 15)
     .attr("y", (d) => d.y)
-    .attr("height", blockSize)
+    .attr("height", 15)
     // @ts-ignore
-    .attr("fill", (d) => d3.color(d.value))
-    .attr("stroke", "#000000")
-    .attr("stroke-width", 1);
-
-  if (game.phase === Phase.MOVING) {
-    const actorData = [];
-    for (let i = 0; i < game.actor.state.length; i++) {
-      actorData.push({
-        x: game.actor.column * blockSize,
-        y: (game.actor.row + i - 1) * blockSize,
-        value: game.actor.state[i],
-      });
-    }
-
-    svg
-      .selectAll()
-      .data(actorData)
-      .enter()
-      .append("g")
-      .append("rect")
-      .attr("class", "could-fly")
-      .attr("x", (d) => d.x)
-      .attr("width", blockSize)
-      .attr("y", (d) => d.y)
-      .attr("height", blockSize)
-      // @ts-ignore
-      .attr("fill", (d) => d3.color(d.value))
-      .attr("stroke", "#000000")
-      .attr("stroke-width", 1);
-  }
+    .attr("fill", () => d3.color("#ff0000"));
 }
 
 export interface MainStore {
   width: number;
   height: number;
-  game: Game;
-  blockSize: number;
-  gameOverPopup: boolean;
+  horPos: number;
+  vertPos: number;
 }
 
 export default component$(() => {
   const store = useStore<MainStore>({
     width: 0,
     height: 0,
-    game: {
-      board: [...initData],
-      actor: {
-        state: [...initActor],
-        column: Math.floor(initData[0].length / 2),
-        row: -2,
-      },
-      phase: Phase.MOVING,
-      nextActor: randomColors(3),
-      score: 0,
-    },
-    blockSize: 0,
-    gameOverPopup: false,
+    horPos: 200,
+    vertPos: 0,
   });
   const containerRef = useSignal<Element>();
   const svgRef = useSignal<Element>();
-
-  const reRender = $(() => {
-    window.requestAnimationFrame(() => {
-      render(store.game, svgRef, store.width, store.height, store.blockSize);
-    });
-  });
-  const doLeft = $(() => {
-    if (store.game.phase === Phase.MOVING) {
-      moveLeft(store.game);
-      reRender();
-    }
-  });
-  const doRight = $(() => {
-    if (store.game.phase === Phase.MOVING) {
-      moveRight(store.game);
-      reRender();
-    }
-  });
-  const doSwap = $(() => {
-    if (store.game.phase === Phase.MOVING) {
-      swapActorColors(store.game);
-      reRender();
-    }
-  });
 
   useOnWindow(
     "resize",
@@ -177,16 +85,10 @@ export default component$(() => {
     "keypress",
     $((event) => {
       const keyEvent = event as KeyboardEvent;
-      const { phase } = store.game;
-      if (phase !== Phase.MOVING) {
-        return;
-      }
       if (keyEvent.code === "KeyA") {
-        doLeft();
+        store.horPos -= 10;
       } else if (keyEvent.code === "KeyD") {
-        doRight();
-      } else if (keyEvent.code === "KeyW") {
-        doSwap();
+        store.horPos += 10;
       }
     })
   );
@@ -194,44 +96,12 @@ export default component$(() => {
   useVisibleTask$(({ cleanup }: { cleanup: Function }) => {
     setSvgDimension(containerRef, store);
     const intervalId = setInterval(() => {
-      const game = store.game;
-
-      if (game.phase === Phase.MOVING) {
-        if (isNextMovePossible(game)) {
-          actorDown(game);
-        } else {
-          endActorSession(game);
-          if (isFinish(game)) {
-            game.phase = Phase.INACTIVE;
-            store.gameOverPopup = true;
-          } else {
-            game.phase = Phase.MATCH_REQUEST;
-          }
-        }
-      } else if (game.phase === Phase.MATCH_REQUEST) {
-        const matched = matching(game, true);
-        if (matched) {
-          game.phase = Phase.COLLAPSE_REQUEST;
-        } else {
-          doNextActor(game);
-          game.phase = Phase.MOVING;
-        }
-      } else if (game.phase === Phase.COLLAPSE_REQUEST) {
-        collapse(game);
-        game.phase = Phase.MATCH_REQUEST;
-      }
-
-      reRender();
+      store.vertPos += 10;
+      window.requestAnimationFrame(() => {
+        render(svgRef, store.width, store.height, store.horPos, store.vertPos);
+      });
     }, 700);
     cleanup(() => clearInterval(intervalId));
-  });
-
-  useTask$(({ track }: { track: Function }) => {
-    track(() => store.gameOverPopup);
-
-    if (store.gameOverPopup) {
-      console.log("Game Over!");
-    }
   });
 
   return (

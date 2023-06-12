@@ -6,16 +6,9 @@ export function setSvgDimension(
   store: MainStore
 ) {
   if (svgRef?.value) {
-    const { height } = svgRef.value.getBoundingClientRect();
-    const rows = store.game.board.length;
-    const columns = store.game.board[0].length;
+    const { width, height } = svgRef.value.getBoundingClientRect();
 
-    const newHeight = (height * 5) / 6;
-    const blockSize = newHeight / rows;
-    const newWidth = blockSize * columns;
-
-    store.width = newWidth;
-    store.height = newHeight;
-    store.blockSize = blockSize;
+    store.width = width;
+    store.height = height;
   }
 }
