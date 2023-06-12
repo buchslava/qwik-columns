@@ -29,29 +29,7 @@ import {
   moveRight,
   randomColors,
   swapActorColors,
-  init,
-  pause,
 } from "./game-logic";
-import Controls from "./controls";
-import Footer from "./footer";
-
-export enum Level {
-  SLOW = "SLOW",
-  NORMAL = "NORMAL",
-  FAST = "FAST",
-}
-
-export const SPEEDS = {
-  [Level.SLOW]: 1000,
-  [Level.NORMAL]: 500,
-  [Level.FAST]: 200,
-};
-
-export const SCORES = {
-  [Level.SLOW]: 1,
-  [Level.NORMAL]: 2,
-  [Level.FAST]: 3,
-};
 
 export function render(
   game: Game,
@@ -109,11 +87,7 @@ export function render(
     .attr("stroke", "#000000")
     .attr("stroke-width", 1);
 
-  if (
-    game.phase === Phase.MOVING ||
-    game.phase === Phase.PAUSED ||
-    game.phase === Phase.DROP
-  ) {
+  if (game.phase === Phase.MOVING || game.phase === Phase.DROP) {
     const actorData = [];
     for (let i = 0; i < game.actor.state.length; i++) {
       actorData.push({
@@ -161,13 +135,10 @@ export interface MainStore {
   height: number;
   game: Game;
   blockSize: number;
-  level: Level;
-  intervalId: any | null;
   gameOverPopup: boolean;
 }
 
 export default component$(() => {
-  // https://qwik.builder.io/docs/concepts/reactivity/#deep-objects
   const store = useStore<MainStore>({
     width: 0,
     height: 0,
@@ -178,15 +149,11 @@ export default component$(() => {
         column: Math.floor(initData[0].length / 2),
         row: -2,
       },
-      phase: Phase.INACTIVE,
-      savedPhase: Phase.INACTIVE,
+      phase: Phase.MOVING,
       nextActor: randomColors(3),
       score: 0,
-      scores: SCORES,
     },
     blockSize: 0,
-    level: Level.NORMAL,
-    intervalId: null,
     gameOverPopup: false,
   });
   const containerRef = useSignal<Element>();
@@ -227,50 +194,6 @@ export default component$(() => {
       store.game.phase = Phase.DROP;
     }
   });
-  const moveTick = $(() => {
-    const game = store.game;
-
-    if (game.phase === Phase.FLYING) {
-      return;
-    }
-
-    if (game.phase === Phase.MOVING) {
-      if (isNextMovePossible(game)) {
-        actorDown(game);
-      } else {
-        endActorSession(game);
-        if (isFinish(game, store.level)) {
-          game.phase = Phase.INACTIVE;
-          store.gameOverPopup = true;
-        } else {
-          game.phase = Phase.MATCH_REQUEST;
-        }
-      }
-    } else if (game.phase === Phase.DROP) {
-      const gameClone = clone(game);
-
-      let steps = 0;
-      while (isNextMovePossible(gameClone)) {
-        actorDown(gameClone);
-        steps++;
-      }
-      reRender(steps);
-      return;
-    } else if (game.phase === Phase.MATCH_REQUEST) {
-      const matched = matching(game, store.level, true);
-      if (matched) {
-        game.phase = Phase.COLLAPSE_REQUEST;
-      } else {
-        doNextActor(game);
-        game.phase = Phase.MOVING;
-      }
-    } else if (game.phase === Phase.COLLAPSE_REQUEST) {
-      collapse(game);
-      game.phase = Phase.MATCH_REQUEST;
-    }
-
-    reRender();
-  });
 
   useOnWindow(
     "resize",
@@ -301,64 +224,69 @@ export default component$(() => {
 
   useVisibleTask$(({ cleanup }: { cleanup: Function }) => {
     setSvgDimension(containerRef, store);
-    store.intervalId = setInterval(moveTick, SPEEDS[store.level]);
-    cleanup(() => clearInterval(store.intervalId));
+    const intervalId = setInterval(() => {
+      const game = store.game;
+
+      if (game.phase === Phase.FLYING) {
+        return;
+      }
+
+      if (game.phase === Phase.MOVING) {
+        if (isNextMovePossible(game)) {
+          actorDown(game);
+        } else {
+          endActorSession(game);
+          if (isFinish(game)) {
+            game.phase = Phase.INACTIVE;
+            store.gameOverPopup = true;
+          } else {
+            game.phase = Phase.MATCH_REQUEST;
+          }
+        }
+      } else if (game.phase === Phase.DROP) {
+        const gameClone = clone(game);
+
+        let steps = 0;
+        while (isNextMovePossible(gameClone)) {
+          actorDown(gameClone);
+          steps++;
+        }
+        reRender(steps);
+        return;
+      } else if (game.phase === Phase.MATCH_REQUEST) {
+        const matched = matching(game, true);
+        if (matched) {
+          game.phase = Phase.COLLAPSE_REQUEST;
+        } else {
+          doNextActor(game);
+          game.phase = Phase.MOVING;
+        }
+      } else if (game.phase === Phase.COLLAPSE_REQUEST) {
+        collapse(game);
+        game.phase = Phase.MATCH_REQUEST;
+      }
+
+      reRender();
+    }, 700);
+    cleanup(() => clearInterval(intervalId));
   });
 
   useTask$(({ track }: { track: Function }) => {
     track(() => store.gameOverPopup);
 
     if (store.gameOverPopup) {
-      setTimeout(() => {
-        store.gameOverPopup = false;
-      }, 5000);
+      console.log("Game Over!");
     }
   });
 
   return (
     <div class="flex justify-center w-screen h-screen pt-5" ref={containerRef}>
-      {store.gameOverPopup && (
-        <div class="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 z-50 w-72 text-center max-w-sm p-6 bg-white text-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 z-50">
-          GAME OVER
-        </div>
-      )}
-      <div>
-        <svg
-          class="game-area"
-          width={store.width}
-          height={store.height}
-          ref={svgRef}
-        />
-      </div>
-      <Controls
-        game={store.game}
-        blockSize={15}
-        level={store.level}
-        onStart$={() => {
-          init(store.game);
-          store.gameOverPopup = false;
-          store.game.phase = Phase.MOVING;
-        }}
-        onPause$={() => {
-          pause(store.game);
-        }}
-        onStop$={() => {
-          store.game.phase = Phase.INACTIVE;
-          store.gameOverPopup = true;
-        }}
-        onLeft$={doLeft}
-        onRight$={doRight}
-        onSwap$={doSwap}
-        onDrop$={doDrop}
-        onLevel$={(level: Level) => {
-          store.level = level;
-          if (store.intervalId !== null) {
-            clearInterval(store.intervalId);
-          }
-          store.intervalId = setInterval(moveTick, SPEEDS[store.level]);
-        }}
+      <svg
+        class="game-area"
+        width={store.width}
+        height={store.height}
+        ref={svgRef}
       />
-      <Footer />
     </div>
   );
 });
