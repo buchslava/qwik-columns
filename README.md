@@ -84,8 +84,5 @@ npm run build.server
 
 <!-- 
 Implement:
-1. Pause
-2. Scores & levels
-3. Interval Id
-4. Controls & footer
+1. Drop
 -->

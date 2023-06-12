@@ -13,7 +13,6 @@ import * as d3 from "d3";
 import { setSvgDimension } from "./utils";
 import type { Game } from "./game-logic";
 import { COLOR_WHITE } from "./game-logic";
-import { clone } from "./game-logic";
 import {
   Phase,
   actorDown,
@@ -36,8 +35,7 @@ export function render(
   svgRef: Signal<Element | undefined>,
   width: number,
   height: number,
-  blockSize: number,
-  passThroughSteps?: number
+  blockSize: number
 ) {
   if (!svgRef.value) {
     return;
@@ -87,7 +85,7 @@ export function render(
     .attr("stroke", "#000000")
     .attr("stroke-width", 1);
 
-  if (game.phase === Phase.MOVING || game.phase === Phase.DROP) {
+  if (game.phase === Phase.MOVING) {
     const actorData = [];
     for (let i = 0; i < game.actor.state.length; i++) {
       actorData.push({
@@ -112,21 +110,6 @@ export function render(
       .attr("fill", (d) => d3.color(d.value))
       .attr("stroke", "#000000")
       .attr("stroke-width", 1);
-
-    if (passThroughSteps) {
-      game.phase = Phase.FLYING;
-      svg
-        .selectAll(".could-fly")
-        .transition()
-        .duration(700)
-        .attr("y", (d: any) => d.y + passThroughSteps * blockSize)
-        // don't mix with on('end', ...)
-        .end()
-        .then(() => {
-          actorDown(game, passThroughSteps);
-          game.phase = Phase.MOVING;
-        });
-    }
   }
 }
 
@@ -159,16 +142,9 @@ export default component$(() => {
   const containerRef = useSignal<Element>();
   const svgRef = useSignal<Element>();
 
-  const reRender = $((steps?: number) => {
+  const reRender = $(() => {
     window.requestAnimationFrame(() => {
-      render(
-        store.game,
-        svgRef,
-        store.width,
-        store.height,
-        store.blockSize,
-        steps
-      );
+      render(store.game, svgRef, store.width, store.height, store.blockSize);
     });
   });
   const doLeft = $(() => {
@@ -187,11 +163,6 @@ export default component$(() => {
     if (store.game.phase === Phase.MOVING) {
       swapActorColors(store.game);
       reRender();
-    }
-  });
-  const doDrop = $(() => {
-    if (store.game.phase === Phase.MOVING) {
-      store.game.phase = Phase.DROP;
     }
   });
 
@@ -214,8 +185,6 @@ export default component$(() => {
         doLeft();
       } else if (keyEvent.code === "KeyD") {
         doRight();
-      } else if (keyEvent.code === "KeyS" || keyEvent.code === "Space") {
-        doDrop();
       } else if (keyEvent.code === "KeyW") {
         doSwap();
       }
@@ -226,10 +195,6 @@ export default component$(() => {
     setSvgDimension(containerRef, store);
     const intervalId = setInterval(() => {
       const game = store.game;
-
-      if (game.phase === Phase.FLYING) {
-        return;
-      }
 
       if (game.phase === Phase.MOVING) {
         if (isNextMovePossible(game)) {
@@ -243,16 +208,6 @@ export default component$(() => {
             game.phase = Phase.MATCH_REQUEST;
           }
         }
-      } else if (game.phase === Phase.DROP) {
-        const gameClone = clone(game);
-
-        let steps = 0;
-        while (isNextMovePossible(gameClone)) {
-          actorDown(gameClone);
-          steps++;
-        }
-        reRender(steps);
-        return;
       } else if (game.phase === Phase.MATCH_REQUEST) {
         const matched = matching(game, true);
         if (matched) {

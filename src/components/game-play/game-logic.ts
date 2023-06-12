@@ -106,8 +106,6 @@ export enum Phase {
   INACTIVE,
   PAUSED,
   MOVING,
-  DROP,
-  FLYING,
   MATCH_REQUEST,
   COLLAPSE_REQUEST,
 }
@@ -124,15 +122,6 @@ export interface Game {
   phase: Phase;
   nextActor: ColumnsColor[];
   score: number;
-}
-
-export function clone(game: Game): Game {
-  return {
-    ...game,
-    nextActor: [...game.nextActor],
-    board: game.board.map((a) => a.slice()),
-    actor: { ...game.actor },
-  };
 }
 
 export function matching(
