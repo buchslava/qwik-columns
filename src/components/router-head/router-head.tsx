@@ -10,7 +10,7 @@ export const RouterHead = component$(() => {
 
   return (
     <>
-      <title>{head.title}</title>
+      <title>Qwik COLUMNS</title>
 
       {/* <link rel="canonical" href={loc.href} /> */}
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
