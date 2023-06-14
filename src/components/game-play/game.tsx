@@ -97,9 +97,7 @@ export default component$(() => {
     setSvgDimension(containerRef, store);
     const intervalId = setInterval(() => {
       store.vertPos += 10;
-      window.requestAnimationFrame(() => {
-        render(svgRef, store.width, store.height, store.horPos, store.vertPos);
-      });
+      render(svgRef, store.width, store.height, store.horPos, store.vertPos);
     }, 700);
     cleanup(() => clearInterval(intervalId));
   });
