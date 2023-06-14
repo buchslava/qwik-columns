@@ -143,9 +143,7 @@ export default component$(() => {
   const svgRef = useSignal<Element>();
 
   const reRender = $(() => {
-    window.requestAnimationFrame(() => {
-      render(store.game, svgRef, store.width, store.height, store.blockSize);
-    });
+    render(store.game, svgRef, store.width, store.height, store.blockSize);
   });
   const doLeft = $(() => {
     if (store.game.phase === Phase.MOVING) {
