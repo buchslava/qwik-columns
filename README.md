@@ -84,5 +84,5 @@ npm run build.server
 
 <!-- 
 Implement:
-1. Drop
+1. Gameplay
 -->
