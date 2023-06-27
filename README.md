@@ -81,3 +81,11 @@ npm run build.server
 ```
 npm run build.server
 ```
+
+<!-- 
+Implement:
+1. Pause
+2. Scores & levels
+3. Interval Id
+4. Controls & footer
+-->

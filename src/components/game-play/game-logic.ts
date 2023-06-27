@@ -1,5 +1,3 @@
-import { Level } from "./game";
-
 export const COLOR_WHITE = "#ffffff";
 
 const w = COLOR_WHITE;
@@ -124,10 +122,8 @@ export interface Game {
   board: ColumnsColor[][];
   actor: Actor;
   phase: Phase;
-  savedPhase: Phase;
   nextActor: ColumnsColor[];
   score: number;
-  scores: { [key: string]: number };
 }
 
 export function clone(game: Game): Game {
@@ -141,7 +137,6 @@ export function clone(game: Game): Game {
 
 export function matching(
   game: Game,
-  level: Level,
   mark: boolean,
   customBoard?: ColumnsColor[][]
 ) {
@@ -401,7 +396,7 @@ export function matching(
         if (match[row][col]) {
           if (mark) {
             board[row][col] = colorsToDisappearHash[board[row][col]];
-            game.score += game.scores[level];
+            game.score++;
           }
           result = true;
         }
@@ -472,7 +467,7 @@ export function endActorSession(game: Game) {
   }
 }
 
-export function isFinish(game: Game, level: Level): boolean {
+export function isFinish(game: Game): boolean {
   const { board, actor } = game;
   const { state } = actor;
   const columnsQty = board[0].length;
@@ -491,7 +486,7 @@ export function isFinish(game: Game, level: Level): boolean {
     return result;
   };
 
-  if (matching(game, level, false, getNextBoard())) {
+  if (matching(game, false, getNextBoard())) {
     return false;
   }
   for (let col = 0; col < columnsQty; col++) {
@@ -612,13 +607,4 @@ export function moveRight(game: Game) {
 export function moveRightTo(game: Game, pos: number) {
   const { actor } = game;
   while (moveRight(game) && actor.column != pos);
-}
-
-export function pause(game: Game) {
-  if (game.phase === Phase.PAUSED) {
-    game.phase = game.savedPhase;
-  } else {
-    game.savedPhase = game.phase;
-    game.phase = Phase.PAUSED;
-  }
 }
